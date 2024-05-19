@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/register_page.dart';
 import 'package:tez_front/widgets/login_card.dart';
-import 'package:tez_front/widgets/project_paddings.dart';
+import 'package:tez_front/constants/project_paddings.dart';
 import '../widgets/custom_button.dart';
 import 'login_page.dart';
 

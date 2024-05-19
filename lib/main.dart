@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'İlk Sayfa',
-      theme: ThemeData.light(), // constantlar gelecek
+      theme: ThemeData.light(),
       home: const FirstPage(),
     );
   }

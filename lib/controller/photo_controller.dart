@@ -1,21 +1,49 @@
-// import 'dart:io';
-// import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-// class HomeController extends GetxController {
-//   var selectedImagePath = ''.obs;
-//   var selectedImageSize = ''.obs;
+class PhotoController extends GetxController {
+  Rx<File?> image = Rx<File?>(null);
+  final _picker = ImagePicker();
 
-//   Future getImage(ImageSource imageSource) async {
-//     final ImagePicker picker = ImagePicker();
-//     final image = await picker.pickImage(source: imageSource);
-//     if (image != null) {
-//       selectedImagePath.value = image.path;
-//       selectedImageSize.value =
-//           "${((File(selectedImagePath.value)).lengthSync() / 1024 / 1024).toStringAsFixed(2)} Mb";
-//     } else {
-//       Get.snackbar("Error", "No Selected Image",
-//           snackPosition: SnackPosition.BOTTOM);
-//     }
-//   }
-// }
+  final RxBool isCameraReady = false.obs;
+
+  Future<void> openCamera() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        image.value = File(pickedFile.path);
+        isCameraReady.value = true;
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error opening camera: $e');
+    }
+  }
+
+  void saveImage() {
+    // Fotoğrafı kaydetme işlemi
+  }
+
+  void cancel() {
+    // İptal işlemi
+  }
+
+  void saveAndShareImage() {
+    // Fotoğrafı kaydetme ve paylaşma işlemi
+  }
+
+  Future<void> pickImageGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      image.value = File(pickedFile.path);
+    }
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    pickImageGallery(); // İlk başta bir fotoğraf seç
+  }
+}

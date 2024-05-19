@@ -21,7 +21,7 @@ class _AnimatedBarState extends State<AnimatedBar> {
     return CurvedNavigationBar(
       color: ColorConstants.darkGreen,
       index: controller.tabIndex.value,
-      backgroundColor: color,
+      backgroundColor: Colors.white.withOpacity(0),
       items: [
         CurvedNavigationBarItem(
           labelStyle: TextStyle(color: color),
@@ -29,15 +29,15 @@ class _AnimatedBarState extends State<AnimatedBar> {
             Icons.home_sharp,
             color: color,
           ),
-          label: 'Home',
+          label: 'Ana Sayfa',
         ),
         CurvedNavigationBarItem(
           labelStyle: TextStyle(color: color),
           child: Icon(
-            Icons.newspaper,
+            Icons.ios_share_sharp,
             color: color,
           ),
-          label: 'Feed',
+          label: 'Mantar Paylaş',
         ),
         CurvedNavigationBarItem(
           labelStyle: TextStyle(color: color),
@@ -45,7 +45,7 @@ class _AnimatedBarState extends State<AnimatedBar> {
             Icons.perm_identity,
             color: color,
           ),
-          label: 'Personal',
+          label: 'Profil',
         ),
       ],
       onTap: (index) {

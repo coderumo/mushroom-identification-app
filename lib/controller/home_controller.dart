@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/pages/home_screen/camera_page.dart';
-import 'package:tez_front/pages/home_screen/feed_page.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
-import 'package:tez_front/pages/home_screen/gallery_page.dart';
-import 'package:tez_front/controller/camera_controller.dart'; // Kamera kontrolcüsünün import edilmesi
+import 'package:tez_front/controller/photo_controller.dart';
+import 'package:tez_front/pages/home_screen/feed_page.dart';
+import 'package:tez_front/widgets/result_mushroom.dart'; // Kamera kontrolcüsünün import edilmesi
 
 class HomeController extends GetxController {
-  final List<Widget> pages = [
-    CameraPage(),
-    const MapPage(),
-    const GalleryPage(),
-    FeedPage()
-  ];
+  final PhotoController _photoController = Get.put(PhotoController());
 
-  final CameraController _cameraController = Get.put(CameraController());
+  final List<Widget> pages = [
+    const Placeholder(), //öylesine
+    const MapPage(),
+    const Placeholder(),
+    const FeedTab()
+  ];
 
   void goToPage(int index) {
     if (index == 0) {
-      _cameraController.openCamera();
+      _photoController.openCamera().then(
+          (value) => Get.to(ResultMushroom(photoController: _photoController)));
+    } else if (index == 2) {
+      _photoController.pickImageGallery().then(
+          (value) => Get.to(ResultMushroom(photoController: _photoController)));
+    } else {
+      Get.to(pages[index], transition: Transition.leftToRight);
     }
-    Get.to(pages[index], transition: Transition.leftToRight);
   }
 }

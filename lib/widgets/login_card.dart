@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
-import 'package:tez_front/widgets/project_paddings.dart';
+import 'package:tez_front/constants/project_paddings.dart';
 
 class LoginCard extends StatelessWidget {
   const LoginCard({

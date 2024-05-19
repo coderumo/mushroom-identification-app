@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/pages/first_page.dart';
-import 'package:tez_front/pages/login_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({

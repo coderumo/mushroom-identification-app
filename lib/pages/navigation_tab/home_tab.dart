@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:tez_front/controller/camera_controller.dart';
 import '../../widgets/custom_card_home_page.dart';
 
 class HomeTab extends StatelessWidget {
@@ -10,7 +8,7 @@ class HomeTab extends StatelessWidget {
     return Center(
       child: GridView.count(
         crossAxisCount: 2,
-        padding: const EdgeInsets.only(top: 80),
+        padding: const EdgeInsets.only(top: 100),
         mainAxisSpacing: 50,
         crossAxisSpacing: 20,
         children: const [

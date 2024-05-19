@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/controller/bottom_bar_controller.dart';
-import 'package:tez_front/pages/navigation_tab/feed_tab.dart';
-import 'package:tez_front/pages/navigation_tab/search_tab.dart';
+import 'package:tez_front/pages/navigation_tab/share_page.dart';
 import 'package:tez_front/pages/navigation_tab/user_tab.dart';
 import '../widgets/animated_bottom_bar.dart';
 import '../widgets/app_bar_custom.dart';
@@ -22,7 +21,7 @@ class HomePage extends StatelessWidget {
             case 0:
               return const HomeTab();
             case 1:
-              return const FeedTab();
+              return ShareMushroom();
             case 2:
               return const UserTab();
             default:
