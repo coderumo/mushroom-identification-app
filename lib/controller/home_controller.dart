@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
 import 'package:tez_front/controller/photo_controller.dart';
 import 'package:tez_front/pages/home_screen/feed_page.dart';
-import 'package:tez_front/widgets/result_mushroom.dart'; // Kamera kontrolcüsünün import edilmesi
+import 'package:tez_front/pages/result_mushroom.dart';
 
 class HomeController extends GetxController {
   final PhotoController _photoController = Get.put(PhotoController());
@@ -17,11 +17,21 @@ class HomeController extends GetxController {
 
   void goToPage(int index) {
     if (index == 0) {
-      _photoController.openCamera().then(
-          (value) => Get.to(ResultMushroom(photoController: _photoController)));
+      try {
+        _photoController
+            .openCamera()
+            .then((value) => Get.to(const ResultMushroom(
+                // photoController: _photoController
+                )));
+      } catch (e) {
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      }
     } else if (index == 2) {
-      _photoController.pickImageGallery().then(
-          (value) => Get.to(ResultMushroom(photoController: _photoController)));
+      _photoController
+          .pickImageGallery()
+          .then((value) => Get.to(const ResultMushroom(
+              //photoController: _photoController
+              )));
     } else {
       Get.to(pages[index], transition: Transition.leftToRight);
     }

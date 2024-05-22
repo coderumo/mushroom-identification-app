@@ -27,7 +27,7 @@ class PhotoController extends GetxController {
   }
 
   void cancel() {
-    // İptal işlemi
+    return Get.back();
   }
 
   void saveAndShareImage() {
@@ -39,11 +39,5 @@ class PhotoController extends GetxController {
     if (pickedFile != null) {
       image.value = File(pickedFile.path);
     }
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    pickImageGallery(); // İlk başta bir fotoğraf seç
   }
 }

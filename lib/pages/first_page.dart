@@ -37,11 +37,16 @@ class FirstPage extends StatelessWidget {
                       height: 50,
                     ),
                     const SizedBox(height: 50),
-                    const CustomButton(
-                        buttonText: 'Giriş Yap', nextPage: LoginPage()),
-                    const CustomButton(
+                    CustomButton(
+                        buttonText: 'Giriş Yap',
+                        onPressed: () {
+                          Get.to(const LoginPage());
+                        }),
+                    CustomButton(
                       buttonText: 'Kayıt Ol',
-                      nextPage: RegisterPage(),
+                      onPressed: () {
+                        Get.to(const RegisterPage());
+                      },
                     ),
                     const SizedBox(
                       height: 20,

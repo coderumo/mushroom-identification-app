@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/widgets/app_bar_custom.dart';
+import 'package:tez_front/widgets/custom_button.dart';
 import 'dart:io';
 
 import '../../controller/photo_controller.dart';
@@ -19,63 +21,65 @@ class ShareMushroom extends StatelessWidget {
         .floor(); // Yarı ekranı kaplayacak satır sayısı
     int itemCount = crossAxisCount * rowCount; // Örnek resim sayısı
 
-    return Column(
-      children: [
-        Obx(() {
-          return photoController.image.value != null
-              ? Stack(alignment: Alignment.topRight, children: [
-                  Image.file(
-                    photoController.image.value!,
+    return Scaffold(
+      body: Column(
+        children: [
+          Obx(() {
+            return photoController.image.value != null
+                ? Stack(alignment: Alignment.topRight, children: [
+                    Image.file(
+                      photoController.image.value!,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 12, right: 12),
+                        child: CustomButton(
+                          buttonText: 'ileri',
+                          onPressed: () {
+                            if (photoController.image.value != null) {
+                              Get.to(() => AddDescriptionPage(
+                                    imageFile: photoController.image.value!,
+                                  ));
+                            }
+                          },
+                        )),
+                  ])
+                : Container(
                     height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (photoController.image.value != null) {
-                          Get.to(() => AddDescriptionPage(
-                                imageFile: photoController.image.value!,
-                              ));
-                        }
-                      },
-                      child: const Text('İleri'),
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Text('No Image Selected'),
+                    ),
+                  );
+          }),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+              ),
+              itemCount: itemCount,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () async {
+                    await photoController.pickImageGallery();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(4.0),
+                    color: Colors.grey[300],
+                    child: Center(
+                      child:
+                          Icon(Icons.image, size: 50, color: Colors.grey[600]),
                     ),
                   ),
-                ])
-              : Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  width: double.infinity,
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: Text('No Image Selected'),
-                  ),
                 );
-        }),
-        Expanded(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
+              },
             ),
-            itemCount: itemCount,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () async {
-                  await photoController.pickImageGallery();
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(4.0),
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Icon(Icons.image, size: 50, color: Colors.grey[600]),
-                  ),
-                ),
-              );
-            },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -91,9 +95,7 @@ class AddDescriptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Description'),
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -102,13 +104,13 @@ class AddDescriptionPage extends StatelessWidget {
               imageFile,
               height: 200,
               width: double.infinity,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descriptionController,
               decoration: const InputDecoration(
-                labelText: 'Description',
+                labelText: 'Açıklama',
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -117,17 +119,12 @@ class AddDescriptionPage extends StatelessWidget {
             TextField(
               controller: locationController,
               decoration: const InputDecoration(
-                labelText: 'Location',
+                labelText: 'Konum',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Save and share logic
-              },
-              child: const Text('Share'),
-            ),
+            CustomButton(buttonText: 'Paylaş', onPressed: () {}),
           ],
         ),
       ),

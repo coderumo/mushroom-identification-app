@@ -34,14 +34,6 @@ class _AnimatedBarState extends State<AnimatedBar> {
         CurvedNavigationBarItem(
           labelStyle: TextStyle(color: color),
           child: Icon(
-            Icons.ios_share_sharp,
-            color: color,
-          ),
-          label: 'Mantar Paylaş',
-        ),
-        CurvedNavigationBarItem(
-          labelStyle: TextStyle(color: color),
-          child: Icon(
             Icons.perm_identity,
             color: color,
           ),

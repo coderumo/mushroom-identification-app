@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/pages/login_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
+import 'package:tez_front/widgets/login_card.dart';
+
+import '../constants/project_paddings.dart';
 
 class RegisterCard extends StatelessWidget {
   const RegisterCard({
@@ -14,21 +18,10 @@ class RegisterCard extends StatelessWidget {
     final double deviceHeight = mediaQueryData.size.height;
     final double deviceWidth = mediaQueryData.size.width;
     return Container(
-      padding: _customPadding(),
-      width: deviceWidth,
+      padding: ProjectPaddings.cardInPadding,
+      width: deviceWidth / 1.5,
       height: deviceHeight / 1.5,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0), // Kenar yuvarlama ekleniyor
-        boxShadow: [
-          BoxShadow(
-            color: ColorConstants.grey.withOpacity(0.5), // Gölge rengi
-            spreadRadius: 3, // Gölgenin yayılma alanı
-            blurRadius: 5, // Gölgelendirme miktarı
-            offset: const Offset(0, 3), // Gölgenin konumu
-          ),
-        ],
-      ),
+      decoration: const LoginCard().decorationContainer(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -74,11 +67,13 @@ class RegisterCard extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          const CustomButton(buttonText: 'Kayıt Ol', nextPage: LoginPage())
+          CustomButton(
+              buttonText: 'Kayıt Ol',
+              onPressed: () {
+                Get.to(const LoginPage());
+              })
         ],
       ),
     );
   }
-
-  EdgeInsets _customPadding() => const EdgeInsets.only(left: 50, right: 50);
 }

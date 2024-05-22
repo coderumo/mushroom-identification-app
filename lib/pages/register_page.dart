@@ -17,16 +17,7 @@ class RegisterPage extends StatelessWidget {
           height: deviceHeight,
           width: deviceWidth,
         ),
-        ListView(children: const [
-          Column(
-            children: <Widget>[
-              SizedBox(
-                height: 240,
-              ),
-              RegisterCard()
-            ],
-          ),
-        ]),
+        const Center(child: RegisterCard()),
       ]),
     );
   }

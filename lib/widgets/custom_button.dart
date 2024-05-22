@@ -4,11 +4,11 @@ import 'package:tez_front/constants/color_constant.dart';
 
 class CustomButton extends StatelessWidget {
   final String buttonText;
-  final Widget nextPage;
+  final Function() onPressed;
   const CustomButton({
     super.key,
     required this.buttonText,
-    required this.nextPage,
+    required this.onPressed,
   });
 
   @override
@@ -18,9 +18,7 @@ class CustomButton extends StatelessWidget {
           backgroundColor:
               MaterialStatePropertyAll<Color>(ColorConstants.darkGreen),
         ),
-        onPressed: () {
-          Get.to(nextPage);
-        },
+        onPressed: onPressed,
         child: Text(
           buttonText,
           style: const TextStyle(color: Colors.black),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 import 'package:tez_front/constants/project_paddings.dart';
@@ -44,7 +45,11 @@ class LoginCard extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const CustomButton(buttonText: buttonText, nextPage: HomePage()),
+            CustomButton(
+                buttonText: buttonText,
+                onPressed: () {
+                  Get.to(const HomePage());
+                }),
             const SizedBox(
               height: 15,
             ),
