@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 
@@ -48,15 +49,33 @@ class UserTab extends StatelessWidget {
   }
 }
 
-class _ImageListWidget extends StatelessWidget {
+class _ImageListWidget extends StatefulWidget {
   const _ImageListWidget({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<_ImageListWidget> createState() => _ImageListWidgetState();
+}
+
+class _ImageListWidgetState extends State<_ImageListWidget> {
+  late final List<ImageModel> _items;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = [
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 5,
+      itemCount: _items.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(20.0),
@@ -71,15 +90,7 @@ class _ImageListWidget extends StatelessWidget {
                       height: 300,
                       child: Column(
                         children: [
-                          Expanded(
-                            child: Hero(
-                              tag: 'image_$index',
-                              child: Image.network(
-                                'https://via.placeholder.com/150',
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
+                          Expanded(child: Image.asset(_items[index].imagePath)),
                         ],
                       ),
                     ),
@@ -87,12 +98,31 @@ class _ImageListWidget extends StatelessWidget {
                 },
               );
             },
-            child: ListTile(
-              title: Text('Image ${index + 1}'),
-              leading: const CircleAvatar(
-                radius: 30,
-                backgroundImage:
-                    NetworkImage('https://via.placeholder.com/150'),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SizedBox(
+                  height: 300,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.asset(
+                          _items[index].imagePath,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Tarih: ${_items[index].date}',
+                          ),
+                          const Text('Konum  ??')
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -100,4 +130,11 @@ class _ImageListWidget extends StatelessWidget {
       },
     );
   }
+}
+
+class ImageModel {
+  final String imagePath;
+  final String date;
+
+  ImageModel({required this.imagePath, required this.date});
 }
