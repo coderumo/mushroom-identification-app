@@ -10,15 +10,20 @@ import 'login_page.dart';
 class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
 
-  final backgrounImage = './assets/images/mantar-bg.jpg';
+  final backgroundImage = './assets/images/mantar-bg.jpg';
   final logo = 'assets/images/logo-g.png';
+
   @override
   Widget build(BuildContext context) {
+    const buttonText = 'Giriş Yap';
+    const buttonText2 = 'Kayıt Ol';
+    const textButton = 'Kayıt Olmadan Devam Et';
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(backgrounImage),
+            image: AssetImage(backgroundImage),
             fit: BoxFit.cover,
           ),
         ),
@@ -38,14 +43,18 @@ class FirstPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 50),
                     CustomButton(
-                        buttonText: 'Giriş Yap',
+                        buttonText: buttonText,
                         onPressed: () {
-                          Get.to(const LoginPage());
+                          Get.to(
+                            const LoginPage(),
+                          );
                         }),
                     CustomButton(
-                      buttonText: 'Kayıt Ol',
+                      buttonText: buttonText2,
                       onPressed: () {
-                        Get.to(const RegisterPage());
+                        Get.to(
+                          const RegisterPage(),
+                        );
                       },
                     ),
                     const SizedBox(
@@ -53,11 +62,15 @@ class FirstPage extends StatelessWidget {
                     ),
                     MaterialButton(
                       child: const Text(
-                        "Kayıt Olmadan Devam Et",
-                        style: TextStyle(color: Colors.black),
+                        textButton,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                       onPressed: () {
-                        Get.to(const HomePage());
+                        Get.to(
+                          const HomePage(),
+                        );
                       },
                     )
                   ],

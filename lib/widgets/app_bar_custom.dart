@@ -46,9 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _CustomNotificationWidget extends StatelessWidget {
-  const _CustomNotificationWidget({
-    super.key,
-  });
+  const _CustomNotificationWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +59,20 @@ class _CustomNotificationWidget extends StatelessWidget {
           child: ListView(
             children: [
               Expanded(
-                  child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    '@sadfndfk Fotoğrafını beğendi',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      '@sadfndfk Fotoğrafını beğendi',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                 ),
-              )),
+              ),
             ],
           ),
         ),

@@ -17,21 +17,25 @@ class HomePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: const CustomAppBar(),
-        body: Obx(() {
-          switch (controller.tabIndex.value) {
-            case 0:
-              return const HomeTab();
-            case 1:
-              return const UserTab();
-            default:
-              return const SizedBox();
-          }
-        }),
+        body: Obx(
+          () {
+            switch (controller.tabIndex.value) {
+              case 0:
+                return const HomeTab();
+              case 1:
+                return const UserTab();
+              default:
+                return const SizedBox();
+            }
+          },
+        ),
         floatingActionButton: FloatingActionButton(
           elevation: 3,
           backgroundColor: ColorConstants.darkGreen,
           onPressed: () {
-            Get.to(ShareMushroom());
+            Get.to(
+              ShareMushroom(),
+            );
           },
           child: const Icon(
             Icons.add,

@@ -13,31 +13,33 @@ class AnimatedBar extends StatefulWidget {
 }
 
 class _AnimatedBarState extends State<AnimatedBar> {
-  Color color = Colors.white;
+  final Color _color = Colors.white;
 
   @override
   Widget build(BuildContext context) {
+    const tabLabel = 'Ana Sayfa';
+    const tabLabel2 = 'Profil';
     BottomBarController controller = Get.find();
     return CurvedNavigationBar(
       color: ColorConstants.darkGreen,
       index: controller.tabIndex.value,
-      backgroundColor: Colors.white.withOpacity(0),
+      backgroundColor: _color.withOpacity(0),
       items: [
         CurvedNavigationBarItem(
-          labelStyle: TextStyle(color: color),
+          labelStyle: TextStyle(color: _color),
           child: Icon(
             Icons.home_sharp,
-            color: color,
+            color: _color,
           ),
-          label: 'Ana Sayfa',
+          label: tabLabel,
         ),
         CurvedNavigationBarItem(
-          labelStyle: TextStyle(color: color),
+          labelStyle: TextStyle(color: _color),
           child: Icon(
             Icons.perm_identity,
-            color: color,
+            color: _color,
           ),
-          label: 'Profil',
+          label: tabLabel2,
         ),
       ],
       onTap: (index) {

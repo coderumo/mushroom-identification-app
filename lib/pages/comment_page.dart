@@ -13,11 +13,14 @@ class CommentSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const hintText = 'Add a comment...';
+
     commentController.comments.assignAll(comments); // Yorumları yükle
     TextEditingController commentControllerText = TextEditingController();
+
     return GestureDetector(
       onTap: () {
-        Get.back(); // Boşluğa tıklandığında BottomSheet'i kapat
+        Get.back();
       },
       child: Container(
         color: Colors
@@ -32,7 +35,9 @@ class CommentSheet extends StatelessWidget {
               return Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -46,18 +51,21 @@ class CommentSheet extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Obx(() {
-                        return ListView.builder(
-                          controller: scrollController,
-                          itemCount: commentController.comments.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text('User $index'),
-                              subtitle: Text(commentController.comments[index]),
-                            );
-                          },
-                        );
-                      }),
+                      child: Obx(
+                        () {
+                          return ListView.builder(
+                            controller: scrollController,
+                            itemCount: commentController.comments.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text('User $index'),
+                                subtitle:
+                                    Text(commentController.comments[index]),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -67,7 +75,7 @@ class CommentSheet extends StatelessWidget {
                             child: TextField(
                               controller: commentControllerText,
                               decoration: InputDecoration(
-                                hintText: 'Add a comment...',
+                                hintText: hintText,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),

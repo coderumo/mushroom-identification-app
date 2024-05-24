@@ -20,7 +20,13 @@ class LoginPage extends StatelessWidget {
           height: deviceHeight,
           width: deviceWidth,
         ),
-        ListView(children: const [Center(child: LoginCard())]),
+        ListView(
+          children: const [
+            Center(
+              child: LoginCard(),
+            ),
+          ],
+        ),
       ]),
     );
   }

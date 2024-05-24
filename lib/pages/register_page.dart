@@ -9,16 +9,19 @@ class RegisterPage extends StatelessWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
     final double deviceWidth = mediaQueryData.size.width;
+
     return Scaffold(
-      body: Stack(children: [
-        Image.asset(
-          "./assets/images/mantar-bg.jpg",
-          fit: BoxFit.cover,
-          height: deviceHeight,
-          width: deviceWidth,
-        ),
-        const Center(child: RegisterCard()),
-      ]),
+      body: Stack(
+        children: [
+          Image.asset(
+            "./assets/images/mantar-bg.jpg",
+            fit: BoxFit.cover,
+            height: deviceHeight,
+            width: deviceWidth,
+          ),
+          const Center(child: RegisterCard()),
+        ],
+      ),
     );
   }
 }

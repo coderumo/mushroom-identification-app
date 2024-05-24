@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
-import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 
 import '../controller/photo_controller.dart';
@@ -40,13 +37,16 @@ class ResultMushroom extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Container(
-                      width: deviceWidth,
-                      padding: const EdgeInsets.all(8),
-                      child: Image.file(
-                        fit: BoxFit.contain,
-                        photoController.image.value!,
-                      )),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.file(
+                          fit: BoxFit.fill,
+                          photoController.image.value!,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 Expanded(
                   flex: 1,
@@ -98,7 +98,6 @@ class ResultMushroom extends StatelessWidget {
 
 class _TextWidget extends StatelessWidget {
   const _TextWidget({
-    super.key,
     required this.bodyText,
   });
 
@@ -118,7 +117,6 @@ class _TextWidget extends StatelessWidget {
 
 class _SubTitleWidget extends StatelessWidget {
   const _SubTitleWidget({
-    super.key,
     required this.subTitle,
   });
 
@@ -138,7 +136,6 @@ class _SubTitleWidget extends StatelessWidget {
 
 class _TitleWidget extends StatelessWidget {
   const _TitleWidget({
-    super.key,
     required this.title,
   });
 

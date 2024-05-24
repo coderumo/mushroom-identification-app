@@ -14,9 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const title = "Mushroom App";
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'İlk Sayfa',
+      title: title,
       theme: ThemeData.light().copyWith(
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle.dark,

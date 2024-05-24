@@ -30,35 +30,40 @@ class LoginCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.email),
+            const TextField(
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.email),
                 labelText: labelText,
               ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.password_outlined),
+            const TextField(
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.password),
                 labelText: labelTextPassword,
               ),
+              textInputAction: TextInputAction.next,
             ),
             const SizedBox(
               height: 30,
             ),
             CustomButton(
-                buttonText: buttonText,
-                onPressed: () {
-                  Get.to(const HomePage());
-                }),
+              buttonText: buttonText,
+              onPressed: () {
+                Get.to(const HomePage());
+              },
+            ),
             const SizedBox(
               height: 15,
             ),
             TextButton(
-                onPressed: () {},
-                child: Text(
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground),
-                    text))
+              onPressed: () {},
+              child: Text(
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground),
+                  text),
+            ),
           ],
         ),
       ),
@@ -70,10 +75,10 @@ class LoginCard extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.8), // Gölge rengi
-            spreadRadius: 3, // Gölgenin yayılma alanı
-            blurRadius: 5, // Gölgelendirme miktarı
-            offset: const Offset(0, 3), // Gölgenin konumu
+            color: Colors.grey.withOpacity(0.8),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
           ),
         ],
       );

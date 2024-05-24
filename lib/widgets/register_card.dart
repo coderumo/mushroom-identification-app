@@ -17,61 +17,63 @@ class RegisterCard extends StatelessWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
     final double deviceWidth = mediaQueryData.size.width;
+
+    const buttonText = 'Kayıt Ol';
+    const label = 'kullanıcı Adı';
+    const labelMail = 'E-Mail';
+    const labelPassword = 'Şifre';
+    const labelPasswordAgain = 'Şifre Tekrar';
+
     return Container(
       padding: ProjectPaddings.cardInPadding,
       width: deviceWidth / 1.5,
-      height: deviceHeight / 1.5,
+      height: deviceHeight / 1.75,
       decoration: const LoginCard().decorationContainer(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              labelText: 'Kullanıcı Adı *',
+          const TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.person),
+              labelText: label,
             ),
-            onSaved: (String? value) {},
+            keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.email),
-              labelText: 'E-mail *',
+          const TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.email),
+              labelText: labelMail,
             ),
-            onSaved: (String? value) {},
-            validator: (String? value) {
-              return (value != null && value.contains('@'))
-                  ? 'Do not use the @ char.'
-                  : null;
-            },
+            textInputAction: TextInputAction.next,
+            autofillHints: [AutofillHints.email],
+            keyboardType: TextInputType.emailAddress,
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.password_outlined),
-              labelText: 'Şifre *',
+          const TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.password),
+              labelText: labelPassword,
             ),
-            onSaved: (String? value) {},
-            validator: (String? value) {
-              return (value != null) ? 'Please enter your password.' : null;
-            },
+            textInputAction: TextInputAction.next,
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.password_outlined),
-              labelText: 'Şifre Tekrar *',
+          const TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.password),
+              labelText: labelPasswordAgain,
             ),
-            onSaved: (String? value) {},
-            validator: (String? value) {
-              return (value != null) ? 'Please enter your password.' : null;
-            },
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(
             height: 20,
           ),
           CustomButton(
-              buttonText: 'Kayıt Ol',
-              onPressed: () {
-                Get.to(const LoginPage());
-              })
+            buttonText: buttonText,
+            onPressed: () {
+              Get.to(
+                const LoginPage(),
+              );
+            },
+          )
         ],
       ),
     );
