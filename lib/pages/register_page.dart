@@ -8,7 +8,6 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
-    final double deviceWidth = mediaQueryData.size.width;
 
     return Scaffold(
       body: Stack(
@@ -17,7 +16,6 @@ class RegisterPage extends StatelessWidget {
             "./assets/images/mantar-bg.jpg",
             fit: BoxFit.cover,
             height: deviceHeight,
-            width: deviceWidth,
           ),
           const Center(child: RegisterCard()),
         ],

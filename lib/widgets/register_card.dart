@@ -63,9 +63,6 @@ class RegisterCard extends StatelessWidget {
             ),
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(
-            height: 20,
-          ),
           CustomButton(
             buttonText: buttonText,
             onPressed: () {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/widgets/custom_text_button.dart';
 
 class LoginCard extends StatelessWidget {
   const LoginCard({
@@ -45,24 +47,17 @@ class LoginCard extends StatelessWidget {
               ),
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(
-              height: 30,
-            ),
             CustomButton(
               buttonText: buttonText,
               onPressed: () {
                 Get.to(const HomePage());
               },
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
-                  text),
+            CustomTextButton(
+              text: text,
+              onPressed: () {
+                Get.to(const HomePage());
+              },
             ),
           ],
         ),
@@ -73,12 +68,12 @@ class LoginCard extends StatelessWidget {
   BoxDecoration decorationContainer() => BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.8),
+            color: ColorConstants.grey,
             spreadRadius: 3,
             blurRadius: 5,
-            offset: const Offset(0, 3),
+            offset: Offset(0, 3),
           ),
         ],
       );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 
 class UserTab extends StatelessWidget {
@@ -8,26 +9,27 @@ class UserTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const name = 'Rumeysa Alkaya';
-    const url = 'https://via.placeholder.com/150';
-    const tabText1 = 'Kaydedilenler';
-    const tabText2 = 'Paylaşılanlar';
+    const String name = 'Rumeysa Alkaya';
+    const String url = 'https://via.placeholder.com/150';
+    const String tabText1 = 'Kaydedilenler';
+    const String tabText2 = 'Paylaşılanlar';
+    const double raidus = 60;
 
     UserTabController controller = Get.put(UserTabController());
 
     return Column(
       children: [
-        const SizedBox(height: 20),
         const CircleAvatar(
-          radius: 60,
+          radius: raidus,
           backgroundImage: NetworkImage(url),
         ),
-        const SizedBox(height: 10),
-        Text(
-          name,
-          style: Theme.of(context).textTheme.titleMedium,
+        Padding(
+          padding: ProjectPaddings.paddingAll,
+          child: Text(
+            name,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
-        const SizedBox(height: 20),
         TabBar(
           controller: controller.tabController,
           tabs: const [
@@ -64,12 +66,7 @@ class _ImageListWidgetState extends State<_ImageListWidget> {
   @override
   void initState() {
     super.initState();
-    _items = [
-      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
-      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
-      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
-      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
-    ];
+    _items = ImageListItems().items;
   }
 
   @override
@@ -78,56 +75,66 @@ class _ImageListWidgetState extends State<_ImageListWidget> {
       itemCount: _items.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: ProjectPaddings.paddingAll,
           child: InkWell(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    child: SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: Column(
-                        children: [
-                          Expanded(child: Image.asset(_items[index].imagePath)),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              _onTap(context, index);
             },
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: SizedBox(
-                  height: 300,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Image.asset(
-                          _items[index].imagePath,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Tarih: ${_items[index].date}',
-                          ),
-                          const Text('Konum  ??')
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            child: _MushroomCard(model: _items[index]),
           ),
         );
       },
+    );
+  }
+
+  void _onTap(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: SizedBox(
+            width: SizedBoxConstant.width,
+            height: SizedBoxConstant.heigth,
+            child: Expanded(child: Image.asset(_items[index].imagePath)),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _MushroomCard extends StatelessWidget {
+  const _MushroomCard({
+    required ImageModel model,
+  }) : _model = model;
+
+  final ImageModel _model;
+
+  @override
+  Widget build(BuildContext context) {
+    const String konum = 'konum ???';
+
+    return Card(
+      child: Padding(
+        padding: ProjectPaddings.paddingAll,
+        child: SizedBox(
+          height: SizedBoxConstant.heigth,
+          child: Column(
+            children: [
+              Expanded(
+                child: Image.asset(
+                  _model.imagePath,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text(_model.date), const Text(konum)],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -137,4 +144,17 @@ class ImageModel {
   final String date;
 
   ImageModel({required this.imagePath, required this.date});
+}
+
+class ImageListItems {
+  late final List<ImageModel> items;
+
+  ImageListItems() {
+    items = [
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+    ];
+  }
 }

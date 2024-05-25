@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/register_page.dart';
+import 'package:tez_front/widgets/custom_text_button.dart';
 import 'package:tez_front/widgets/login_card.dart';
 import 'package:tez_front/constants/project_paddings.dart';
 import '../widgets/custom_button.dart';
@@ -60,19 +61,12 @@ class FirstPage extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    MaterialButton(
-                      child: const Text(
-                        textButton,
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
+                    CustomTextButton(
+                      text: textButton,
                       onPressed: () {
-                        Get.to(
-                          const HomePage(),
-                        );
+                        Get.to(const HomePage());
                       },
-                    )
+                    ),
                   ],
                 ),
               ),

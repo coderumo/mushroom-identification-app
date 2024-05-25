@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/constants/project_paddings.dart';
 import 'package:tez_front/widgets/login_card.dart';
 import '../controller/home_controller.dart';
 
@@ -18,28 +19,33 @@ class CustomHomeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double iconSize = 50;
+
     final HomeController controller = Get.put(HomeController());
     return GestureDetector(
       onTap: () {
         controller.goToPage(pageIndex);
       },
-      child: Container(
-        margin: const EdgeInsets.all(12),
-        decoration: const LoginCard().decorationContainer(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              iconPath,
-              height: 50,
-              width: 50,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
+      child: Padding(
+        padding: ProjectPaddings.paddingAll,
+        child: Container(
+          decoration: const LoginCard().decorationContainer(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: ProjectPaddings.paddingAll,
+                child: SvgPicture.asset(
+                  iconPath,
+                  width: iconSize,
+                ),
+              ),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );

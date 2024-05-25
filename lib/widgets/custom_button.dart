@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tez_front/constants/color_constant.dart';
+import 'package:tez_front/constants/project_paddings.dart';
 
 class CustomButton extends StatelessWidget {
   final String buttonText;
@@ -12,15 +13,18 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: const ButtonStyle(
-        backgroundColor:
-            MaterialStatePropertyAll<Color>(ColorConstants.darkGreen),
-      ),
-      onPressed: onPressed,
-      child: Text(
-        buttonText,
-        style: const TextStyle(color: Colors.black),
+    return Padding(
+      padding: ProjectPaddings.buttonOutPadding,
+      child: ElevatedButton(
+        style: const ButtonStyle(
+          backgroundColor:
+              MaterialStatePropertyAll<Color>(ColorConstants.darkGreen),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          buttonText,
+          style: const TextStyle(color: Colors.black),
+        ),
       ),
     );
   }

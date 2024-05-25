@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/pages/first_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -10,27 +12,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String projectLogo = 'assets/images/logo-g.png';
+    const double logoSize = 40;
+
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AppBar(
         automaticallyImplyLeading: false,
         title: Expanded(
             child: Image.asset(
-          'assets/images/logo-g.png',
-          height: 40,
+          projectLogo,
+          height: logoSize,
         )),
         actions: [
-          IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const _CustomNotificationWidget();
-                    });
-              },
-              icon: const Icon(
-                Icons.notifications,
-              )),
+          _AppBarIconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              _showNotification(context);
+            },
+          ),
           IconButton(
               onPressed: () {
                 Get.off(const FirstPage());
@@ -43,40 +43,58 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  void _showNotification(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: ProjectPaddings.paddingAll,
+            child: SizedBox(
+              width: SizedBoxConstant.width,
+              height: SizedBoxConstant.heigth,
+              child: ListView(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: ProjectPaddings.paddingAll,
+                        child: Text(
+                          '@sadfndfk Fotoğrafını beğendi',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _CustomNotificationWidget extends StatelessWidget {
-  const _CustomNotificationWidget();
+class _AppBarIconButton extends StatelessWidget {
+  const _AppBarIconButton({
+    required this.icon,
+    required this.onPressed,
+  });
+
+  final Icon icon;
+  final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SizedBox(
-          width: 300,
-          height: 300,
-          child: ListView(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      '@sadfndfk Fotoğrafını beğendi',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return IconButton(
+      onPressed: onPressed,
+      icon: icon,
     );
   }
 }
