@@ -32,10 +32,7 @@ class UserTab extends StatelessWidget {
         ),
         TabBar(
           controller: controller.tabController,
-          tabs: const [
-            Tab(text: tabText1),
-            Tab(text: tabText2),
-          ],
+          tabs: MyTabViews.values.map((e) => Tab(text: e.name)).toList(),
         ),
         Expanded(
           child: TabBarView(
@@ -102,6 +99,10 @@ class _ImageListWidgetState extends State<_ImageListWidget> {
     );
   }
 }
+
+enum MyTabViews { Kaydedilenler, Paylasilanlar }
+
+extension MyTabViewExtension on MyTabViews {}
 
 class _MushroomCard extends StatelessWidget {
   const _MushroomCard({
