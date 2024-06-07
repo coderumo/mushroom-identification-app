@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/project_paddings.dart';
-import 'package:tez_front/widgets/login_card.dart';
+import 'package:tez_front/pages/login_page.dart';
 import '../controller/home_controller.dart';
 
 class CustomHomeIconButton extends StatelessWidget {

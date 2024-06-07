@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
           backgroundColor: ColorConstants.darkGreen,
           onPressed: () {
             Get.to(
-              ShareMushroom(),
+              const ShareMushroom(),
             );
           },
           child: const Icon(

@@ -18,7 +18,7 @@ class HomeTab extends StatelessWidget {
             pageIndex: 0,
           ),
           CustomHomeIconButton(
-            label: 'Haritadan İşaretle',
+            label: 'Haritada Göster',
             iconPath: 'assets/icons/map.svg',
             pageIndex: 1,
           ),

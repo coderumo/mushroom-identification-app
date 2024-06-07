@@ -6,21 +6,32 @@ import 'dart:io';
 
 import '../../controller/photo_controller.dart';
 
-class ShareMushroom extends StatelessWidget {
+class ShareMushroom extends StatefulWidget {
+  const ShareMushroom({Key? key}) : super(key: key);
+
+  @override
+  _ShareMushroomState createState() => _ShareMushroomState();
+}
+
+class _ShareMushroomState extends State<ShareMushroom> {
   final PhotoController photoController = Get.put(PhotoController());
 
-  ShareMushroom({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await photoController.pickImageGallery();
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    int crossAxisCount = 4; // Galeri gridindeki sütun sayısı
-    double itemHeight = screenHeight * 0.1; // Galeri öğesinin yüksekliği
-    int rowCount = ((screenHeight * 0.5) / itemHeight)
-        .floor(); // Yarı ekranı kaplayacak satır sayısı
-    int itemCount = crossAxisCount * rowCount; // Örnek resim sayısı
-
     return Scaffold(
       body: Column(
         children: [
@@ -36,7 +47,7 @@ class ShareMushroom extends StatelessWidget {
                     Padding(
                         padding: const EdgeInsets.only(top: 12, right: 12),
                         child: CustomButton(
-                          buttonText: 'ileri',
+                          buttonText: 'İleri',
                           onPressed: () {
                             if (photoController.image.value != null) {
                               Get.to(() => AddDescriptionPage(
@@ -50,32 +61,26 @@ class ShareMushroom extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
                     color: Colors.grey[300],
-                    child: const Center(
-                      child: Text('No Image Selected'),
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt,
+                            size: 50, color: Colors.grey[600]),
+                        onPressed: () async {
+                          await photoController.pickImageGallery();
+                        },
+                      ),
                     ),
                   );
           }),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-              ),
-              itemCount: itemCount,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    await photoController.pickImageGallery();
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(4.0),
-                    color: Colors.grey[300],
-                    child: Center(
-                      child:
-                          Icon(Icons.image, size: 50, color: Colors.grey[600]),
-                    ),
-                  ),
-                );
-              },
+            child: Center(
+              child: Obx(() {
+                if (photoController.image.value == null) {
+                  return const Text('No Image Selected');
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
             ),
           ),
         ],

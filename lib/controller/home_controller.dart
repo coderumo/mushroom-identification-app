@@ -6,7 +6,7 @@ import 'package:tez_front/pages/home_screen/feed_page.dart';
 import 'package:tez_front/pages/result_mushroom.dart';
 
 class HomeController extends GetxController {
-  final PhotoController _photoController = Get.put(PhotoController());
+  final PhotoController photoController = Get.put(PhotoController());
 
   final List<Widget> pages = [
     const Placeholder(), //öylesine
@@ -18,7 +18,7 @@ class HomeController extends GetxController {
   void goToPage(int index) {
     if (index == 0) {
       try {
-        _photoController
+        photoController
             .openCamera()
             .then((value) => Get.to(const ResultMushroom(
                 // photoController: _photoController
@@ -27,7 +27,7 @@ class HomeController extends GetxController {
         print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
     } else if (index == 2) {
-      _photoController
+      photoController
           .pickImageGallery()
           .then((value) => Get.to(const ResultMushroom(
               //photoController: _photoController

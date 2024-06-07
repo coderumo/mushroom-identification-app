@@ -15,6 +15,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     const String projectLogo = 'assets/images/logo-g.png';
     const double logoSize = 40;
 
+    const text = '@rumeysa fotoğrafını beğendi';
+
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AppBar(
@@ -28,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           _AppBarIconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
-              _showNotification(context);
+              _showNotification(context, text);
             },
           ),
           IconButton(
@@ -44,7 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  void _showNotification(BuildContext context) {
+  void _showNotification(BuildContext context, String text) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -65,7 +67,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Padding(
                         padding: ProjectPaddings.paddingAll,
                         child: Text(
-                          '@sadfndfk Fotoğrafını beğendi',
+                          text,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
