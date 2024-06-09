@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tez_front/constants/project_paddings.dart';
 
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({
@@ -12,11 +13,14 @@ class CustomTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(
-          style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-          text),
+    return Padding(
+      padding: ProjectPaddings.buttonOutPadding,
+      child: TextButton(
+        onPressed: onPressed,
+        child: Text(
+            style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+            text),
+      ),
     );
   }
 }

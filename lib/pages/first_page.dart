@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/register_page.dart';
+import 'package:tez_front/widgets/boz_decoration.dart';
 import 'package:tez_front/widgets/custom_text_button.dart';
 import 'package:tez_front/constants/project_paddings.dart';
 import '../widgets/custom_button.dart';
@@ -32,16 +33,18 @@ class FirstPage extends StatelessWidget {
             child: Padding(
               padding: ProjectPaddings.cardOutPadding,
               child: Container(
-                decoration: const LoginCard().decorationContainer(),
+                decoration: decorationContainer(),
                 padding: ProjectPaddings.cardInPadding,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset(
-                      logo,
-                      height: 50,
+                    Padding(
+                      padding: ProjectPaddings.paddingAll,
+                      child: Image.asset(
+                        logo,
+                        height: 50,
+                      ),
                     ),
-                    const SizedBox(height: 50),
                     CustomButton(
                         buttonText: buttonText,
                         onPressed: () {
@@ -56,9 +59,6 @@ class FirstPage extends StatelessWidget {
                           const RegisterPage(),
                         );
                       },
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                     CustomTextButton(
                       text: textButton,

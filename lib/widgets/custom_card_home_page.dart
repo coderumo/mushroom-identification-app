@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/project_paddings.dart';
 import 'package:tez_front/pages/login_page.dart';
+import 'package:tez_front/widgets/boz_decoration.dart';
 import '../controller/home_controller.dart';
 
 class CustomHomeIconButton extends StatelessWidget {
@@ -29,7 +30,7 @@ class CustomHomeIconButton extends StatelessWidget {
       child: Padding(
         padding: ProjectPaddings.paddingAll,
         child: Container(
-          decoration: const LoginCard().decorationContainer(),
+          decoration: decorationContainer(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

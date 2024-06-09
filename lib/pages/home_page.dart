@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/controller/bottom_bar_controller.dart';
-import 'package:tez_front/pages/navigation_tab/user_tab.dart';
+import 'package:tez_front/pages/navigation_tab/profile_tab.dart';
 import '../widgets/animated_bottom_bar.dart';
 import '../widgets/app_bar_custom.dart';
 import 'navigation_tab/home_tab.dart';
-import 'navigation_tab/share_page.dart';
+import 'share_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

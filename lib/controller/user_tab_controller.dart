@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../pages/navigation_tab/user_tab.dart';
+import '../pages/navigation_tab/profile_tab.dart';
 
 class UserTabController extends GetxController
     with SingleGetTickerProviderMixin {

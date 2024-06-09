@@ -11,8 +11,6 @@ class UserTab extends StatelessWidget {
   Widget build(BuildContext context) {
     const String name = 'Rumeysa Alkaya';
     const String url = 'https://via.placeholder.com/150';
-    const String tabText1 = 'Kaydedilenler';
-    const String tabText2 = 'Paylaşılanlar';
     const double raidus = 60;
 
     UserTabController controller = Get.put(UserTabController());
@@ -92,7 +90,7 @@ class _ImageListWidgetState extends State<_ImageListWidget> {
           child: SizedBox(
             width: SizedBoxConstant.width,
             height: SizedBoxConstant.heigth,
-            child: Expanded(child: Image.asset(_items[index].imagePath)),
+            child: Image.asset(_items[index].imagePath),
           ),
         );
       },
@@ -107,14 +105,14 @@ extension MyTabViewExtension on MyTabViews {}
 class _MushroomCard extends StatelessWidget {
   const _MushroomCard({
     required ImageModel model,
-  }) : _model = model;
+    Key? key,
+  })  : _model = model,
+        super(key: key);
 
   final ImageModel _model;
 
   @override
   Widget build(BuildContext context) {
-    const String konum = 'konum ???';
-
     return Card(
       child: Padding(
         padding: ProjectPaddings.paddingAll,
@@ -130,8 +128,11 @@ class _MushroomCard extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(_model.date), const Text(konum)],
-              )
+                children: [
+                  Text(_model.date),
+                  Text(_model.konum ?? ''),
+                ],
+              ),
             ],
           ),
         ),
@@ -143,8 +144,9 @@ class _MushroomCard extends StatelessWidget {
 class ImageModel {
   final String imagePath;
   final String date;
+  final String? konum;
 
-  ImageModel({required this.imagePath, required this.date});
+  ImageModel({this.konum, required this.imagePath, required this.date});
 }
 
 class ImageListItems {
@@ -152,7 +154,10 @@ class ImageListItems {
 
   ImageListItems() {
     items = [
-      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(
+          imagePath: 'assets/images/mantar.png',
+          date: '02.12.2024',
+          konum: 'Samsun'),
       ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
       ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
       ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),

@@ -4,7 +4,7 @@ import 'package:tez_front/widgets/app_bar_custom.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 import 'dart:io';
 
-import '../../controller/photo_controller.dart';
+import '../controller/photo_controller.dart';
 
 class ShareMushroom extends StatefulWidget {
   const ShareMushroom({Key? key}) : super(key: key);

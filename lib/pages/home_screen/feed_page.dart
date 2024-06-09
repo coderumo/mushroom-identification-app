@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/widgets/app_bar_custom.dart';
 
-import '../comment_page.dart';
+import '../../widgets/comment_widget.dart';
 
 class FeedTab extends StatelessWidget {
   const FeedTab({Key? key}) : super(key: key);

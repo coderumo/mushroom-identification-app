@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:tez_front/constants/background_image.dart';
 import '../constants/project_paddings.dart';
+import '../widgets/boz_decoration.dart';
 import '../widgets/custom_button.dart';
 import 'login_page.dart';
 
@@ -13,12 +14,14 @@ class RegisterPage extends StatelessWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
 
+    BackgroundImage image = BackgroundImage();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Image.asset(
-            "./assets/images/mantar-bg.jpg",
+            image.backgroundImage,
             fit: BoxFit.cover,
             height: deviceHeight,
           ),
@@ -29,10 +32,28 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-class RegisterCard extends StatelessWidget {
-  const RegisterCard({
-    super.key,
-  });
+class RegisterCard extends StatefulWidget {
+  const RegisterCard({super.key});
+
+  @override
+  _RegisterCardState createState() => _RegisterCardState();
+}
+
+class _RegisterCardState extends State<RegisterCard> {
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordAgainController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordAgainController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,57 +66,100 @@ class RegisterCard extends StatelessWidget {
     const labelMail = 'E-Mail';
     const labelPassword = 'Şifre';
     const labelPasswordAgain = 'Şifre Tekrar';
+    const requiredUserName = 'Kullanıcı Adı Gerekli';
+    const requiredEmail = 'E-mail Gerekli';
+    const invalidEmail = 'Geçersiz Email';
+    const requiredPassword = 'Şifre Gerekli';
+    const againPassword = 'Şifre Tekrar';
+    const errorPassword = 'Şifreler Uyuşmuyor';
 
     return Container(
       padding: ProjectPaddings.cardInPadding,
       width: deviceWidth / 1.5,
       height: deviceHeight / 1.75,
-      decoration: const LoginCard().decorationContainer(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.person),
-              labelText: label,
+      decoration: decorationContainer(),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.person),
+                labelText: label,
+              ),
+              keyboardType: TextInputType.name,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return requiredUserName;
+                }
+                return null;
+              },
             ),
-            keyboardType: TextInputType.name,
-            textInputAction: TextInputAction.next,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.email),
-              labelText: labelMail,
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.email),
+                labelText: labelMail,
+              ),
+              textInputAction: TextInputAction.next,
+              autofillHints: const [AutofillHints.email],
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return requiredEmail;
+                } else if (!GetUtils.isEmail(value)) {
+                  return invalidEmail;
+                }
+                return null;
+              },
             ),
-            textInputAction: TextInputAction.next,
-            autofillHints: const [AutofillHints.email],
-            keyboardType: TextInputType.emailAddress,
-          ),
-          TextFormField(
-            obscureText: true,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.password),
-              labelText: labelPassword,
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.password),
+                labelText: labelPassword,
+              ),
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return requiredPassword;
+                }
+                return null;
+              },
             ),
-            textInputAction: TextInputAction.next,
-          ),
-          TextFormField(
-            obscureText: true,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.password),
-              labelText: labelPasswordAgain,
+            TextFormField(
+              controller: _passwordAgainController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.password),
+                labelText: labelPasswordAgain,
+              ),
+              textInputAction: TextInputAction.done,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return againPassword;
+                } else if (value != _passwordController.text) {
+                  return errorPassword;
+                }
+                return null;
+              },
             ),
-            textInputAction: TextInputAction.next,
-          ),
-          CustomButton(
-            buttonText: buttonText,
-            onPressed: () {
-              Get.to(
-                const LoginPage(),
-              );
-            },
-          )
-        ],
+            CustomButton(
+              buttonText: buttonText,
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  Get.to(
+                    const LoginPage(),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
