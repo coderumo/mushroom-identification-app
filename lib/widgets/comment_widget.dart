@@ -23,10 +23,9 @@ class CommentSheet extends StatelessWidget {
         Get.back();
       },
       child: Container(
-        color: Colors
-            .transparent, // Boşluğu tıklanabilir yapmak için şeffaf arka plan
+        color: Colors.transparent,
         child: GestureDetector(
-          onTap: () {}, // İçeriğe tıklanıldığında hiçbir şey yapma
+          onTap: () {},
           child: DraggableScrollableSheet(
             initialChildSize: 0.5,
             minChildSize: 0.25,

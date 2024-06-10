@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/controller/auth_snackbar_controller.dart';
 import 'package:tez_front/widgets/app_bar_custom.dart';
 
 import '../../widgets/comment_widget.dart';
@@ -35,7 +37,7 @@ class FeedList extends StatelessWidget {
   }
 }
 
-class FeedCard extends StatelessWidget {
+class FeedCard extends StatefulWidget {
   final String username;
   final String imageUrl;
   final String description;
@@ -50,16 +52,28 @@ class FeedCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<FeedCard> createState() => _FeedCardState();
+}
+
+class _FeedCardState extends State<FeedCard> {
+  AuthController authController = Get.find();
+
+  @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceWidth = mediaQueryData.size.width;
     final double imageHeight = (deviceWidth * 16) / 16;
+    const loadingGiphy = 'assets/gif/giphy.gif';
+    const commentText = 'Yorumları Göster..';
+
+    final _Paddings padding = _Paddings();
+    final _CustomBorderRadius radius = _CustomBorderRadius();
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: padding.paddingAll,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: radius.circularAll,
         ),
         elevation: 5,
         child: Column(
@@ -67,27 +81,21 @@ class FeedCard extends StatelessWidget {
           children: [
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(imageUrl),
+                backgroundImage: NetworkImage(widget.imageUrl),
               ),
-              title: Text(username),
+              title: Text(widget.username),
             ),
             Container(
               width: double.infinity,
               height: imageHeight,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(15.0),
-                  bottomRight: Radius.circular(15.0),
-                ),
+              decoration: BoxDecoration(
+                borderRadius: radius.radiusOnlyTB,
               ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15.0),
-                  bottomRight: Radius.circular(15.0),
-                ),
+                borderRadius: radius.radiusOnlyTB,
                 child: FadeInImage.assetNetwork(
-                  placeholder: 'assets/gif/giphy.gif',
-                  image: imageUrl,
+                  placeholder: loadingGiphy,
+                  image: widget.imageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: imageHeight,
@@ -95,11 +103,11 @@ class FeedCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(description),
+              padding: padding.paddingAll,
+              child: Text(widget.description),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: padding.paddingAll,
               child: GestureDetector(
                 onTap: () {
                   Get.bottomSheet(
@@ -107,46 +115,67 @@ class FeedCard extends StatelessWidget {
                       onTap: () {
                         Get.back();
                       },
-                      child: CommentSheet(postId: username, comments: comments),
+                      child: CommentSheet(
+                          postId: widget.username, comments: widget.comments),
                     ),
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                   );
                 },
-                child: const Text(
-                  'Yorumları Göster..',
-                  style: TextStyle(color: Colors.blue),
+                child: Text(
+                  commentText,
+                  style: TextStyle(
+                      color: Theme.of(context).copyWith().primaryColorDark),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: padding.paddingAll,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.thumb_up),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (authController.isGuest.value) {
+                        authController.snackBar();
+                      } else {
+                        //backende istek
+                        printError();
+                      }
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.comment),
                     onPressed: () {
-                      Get.bottomSheet(
-                        GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: CommentSheet(
-                              postId: username, comments: comments),
-                        ),
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                      );
+                      if (!authController.isGuest.value) {
+                        Get.bottomSheet(
+                          GestureDetector(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: CommentSheet(
+                                postId: widget.username,
+                                comments: widget.comments),
+                          ),
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                        );
+                      } else {
+                        authController.snackBar();
+                      }
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.share),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (authController.isGuest.value) {
+                        authController.snackBar();
+                      } else {
+                        //backende istek
+                        printError();
+                      }
+                    },
                   ),
                 ],
               ),
@@ -156,4 +185,18 @@ class FeedCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CustomBorderRadius {
+  final circularAll = BorderRadius.circular(15.0);
+  final radiusOnlyTB = const BorderRadius.only(
+    bottomLeft: Radius.circular(15.0),
+    bottomRight: Radius.circular(15.0),
+  );
+}
+
+class _Paddings {
+  final topPadding = const EdgeInsets.only(top: 10);
+  final bottomPadding = const EdgeInsets.only(bottom: 10);
+  final paddingAll = const EdgeInsets.all(8);
 }

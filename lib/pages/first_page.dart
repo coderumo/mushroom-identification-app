@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/controller/auth_snackbar_controller.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/register_page.dart';
-import 'package:tez_front/widgets/boz_decoration.dart';
+import 'package:tez_front/widgets/box_decoration.dart';
 import 'package:tez_front/widgets/custom_text_button.dart';
 import 'package:tez_front/constants/project_paddings.dart';
 import '../widgets/custom_button.dart';
@@ -19,6 +20,8 @@ class FirstPage extends StatelessWidget {
     const buttonText = 'Giriş Yap';
     const buttonText2 = 'Kayıt Ol';
     const textButton = 'Kayıt Olmadan Devam Et';
+
+    AuthController authController = Get.put(AuthController());
 
     return Scaffold(
       body: Container(
@@ -48,6 +51,7 @@ class FirstPage extends StatelessWidget {
                     CustomButton(
                         buttonText: buttonText,
                         onPressed: () {
+                          authController.login();
                           Get.to(
                             const LoginPage(),
                           );
@@ -63,6 +67,7 @@ class FirstPage extends StatelessWidget {
                     CustomTextButton(
                       text: textButton,
                       onPressed: () {
+                        authController.continueAsGuest();
                         Get.to(const HomePage());
                       },
                     ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/background_image.dart';
 import '../constants/project_paddings.dart';
-import '../widgets/boz_decoration.dart';
 import '../widgets/custom_button.dart';
 import 'login_page.dart';
+import '../widgets/box_decoration.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
