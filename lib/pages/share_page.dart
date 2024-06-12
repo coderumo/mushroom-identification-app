@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/widgets/app_bar_custom.dart';
+import 'package:tez_front/widgets/custom_app_bar.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 import 'dart:io';
 

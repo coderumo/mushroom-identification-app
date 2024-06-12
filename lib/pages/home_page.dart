@@ -5,7 +5,7 @@ import 'package:tez_front/controller/auth_snackbar_controller.dart';
 import 'package:tez_front/controller/bottom_bar_controller.dart';
 import 'package:tez_front/pages/navigation_tab/profile_tab.dart';
 import '../widgets/animated_bottom_bar.dart';
-import '../widgets/app_bar_custom.dart';
+import '../widgets/custom_app_bar.dart';
 import 'navigation_tab/home_tab.dart';
 import 'share_page.dart';
 
@@ -36,8 +36,7 @@ class HomePage extends StatelessWidget {
           backgroundColor: ColorConstants.darkGreen,
           onPressed: () {
             if (authController.isGuest.value) {
-              Get.snackbar('Erişim Engellendi',
-                  'Bu sayfaya erişim için giriş yapmanız gerekiyor.');
+              authController.snackBar();
             } else {
               Get.to(const ShareMushroom());
             }

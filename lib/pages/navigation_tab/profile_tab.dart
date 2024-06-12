@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/constants/padding_constant.dart';
 import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 
@@ -37,7 +37,7 @@ class UserTab extends StatelessWidget {
             controller: controller.tabController,
             children: const [
               _ImageListWidget(),
-              _ImageListWidget(),
+              _ImageListWidget2(),
             ],
           ),
         ),
@@ -73,24 +73,9 @@ class _ImageListWidgetState extends State<_ImageListWidget> {
           padding: ProjectPaddings.paddingAll,
           child: InkWell(
             onTap: () {
-              _onTap(context, index);
+              onTap(context, index, _items);
             },
             child: _MushroomCard(model: _items[index]),
-          ),
-        );
-      },
-    );
-  }
-
-  void _onTap(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: SizedBox(
-            width: SizedBoxConstant.width,
-            height: SizedBoxConstant.heigth,
-            child: Image.asset(_items[index].imagePath),
           ),
         );
       },
@@ -163,4 +148,71 @@ class ImageListItems {
       ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
     ];
   }
+}
+
+class ImageListItems2 {
+  late final List<ImageModel> items;
+
+  ImageListItems2() {
+    items = [
+      ImageModel(
+        imagePath: 'assets/images/mantar.png',
+        date: '02.12.2024',
+      ),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+      ImageModel(imagePath: 'assets/images/mantar.png', date: '02.12.2024'),
+    ];
+  }
+}
+
+class _ImageListWidget2 extends StatefulWidget {
+  const _ImageListWidget2({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_ImageListWidget2> createState() => _ImageListWidget2State();
+}
+
+class _ImageListWidget2State extends State<_ImageListWidget2> {
+  late final List<ImageModel> _items;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = ImageListItems2().items;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: _items.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: ProjectPaddings.paddingAll,
+          child: InkWell(
+            onTap: () {
+              onTap(context, index, _items);
+            },
+            child: _MushroomCard(model: _items[index]),
+          ),
+        );
+      },
+    );
+  }
+}
+
+void onTap(BuildContext context, int index, List<ImageModel> items) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: SizedBox(
+          width: SizedBoxConstant.width,
+          height: SizedBoxConstant.heigth,
+          child: Image.asset(items[index].imagePath),
+        ),
+      );
+    },
+  );
 }

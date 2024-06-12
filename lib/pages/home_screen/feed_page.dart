@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/constants/padding_constant.dart';
 import 'package:tez_front/controller/auth_snackbar_controller.dart';
-import 'package:tez_front/widgets/app_bar_custom.dart';
+import 'package:tez_front/widgets/custom_app_bar.dart';
 
 import '../../widgets/comment_widget.dart';
 

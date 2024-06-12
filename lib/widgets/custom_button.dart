@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tez_front/constants/color_constant.dart';
-import 'package:tez_front/constants/project_paddings.dart';
+import 'package:tez_front/constants/padding_constant.dart';
 
 class CustomButton extends StatelessWidget {
   final String buttonText;

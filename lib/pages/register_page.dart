@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/background_image.dart';
-import '../constants/project_paddings.dart';
+import '../constants/padding_constant.dart';
 import '../widgets/custom_button.dart';
 import 'login_page.dart';
 import '../widgets/box_decoration.dart';

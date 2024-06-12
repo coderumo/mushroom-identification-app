@@ -14,22 +14,22 @@ class HomeTab extends StatelessWidget {
         children: const [
           CustomHomeIconButton(
             label: 'Hızlı Tarama',
-            iconPath: 'assets/icons/camera.svg',
+            iconPath: 'assets/svg/camera.svg',
             pageIndex: 0,
           ),
           CustomHomeIconButton(
             label: 'Haritada Göster',
-            iconPath: 'assets/icons/map.svg',
+            iconPath: 'assets/svg/map.svg',
             pageIndex: 1,
           ),
           CustomHomeIconButton(
             label: 'Galeriden Seç',
-            iconPath: 'assets/icons/gallery.svg',
+            iconPath: 'assets/svg/gallery.svg',
             pageIndex: 2,
           ),
           CustomHomeIconButton(
             label: 'Mantar Keşfet',
-            iconPath: 'assets/icons/mushroom.svg',
+            iconPath: 'assets/svg/mushroom.svg',
             pageIndex: 3,
           ),
         ],

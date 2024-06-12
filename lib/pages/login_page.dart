@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/background_image.dart';
 import 'package:tez_front/pages/home_page.dart';
-import '../constants/project_paddings.dart';
+import '../constants/padding_constant.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_button.dart';
