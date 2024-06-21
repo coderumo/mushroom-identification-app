@@ -47,12 +47,19 @@ dependencies:
   http: ^1.2.1
   #map
   google_maps_flutter: ^2.6.1
-  geolocator: ^9.0.0
+  geocoding: ^3.0.0 
+  geolocator: ^10.1.0
+  map_location_picker: ^1.2.9
+  #Storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   #secure
   permission_handler: ^10.2.0
   share: ^2.0.4
   #storage
   shared_preferences: ^2.2.3
+  #file
+  file_picker: ^8.0.5
 
 
 

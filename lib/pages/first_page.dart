@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/controller/auth_snackbar_controller.dart';
+import 'package:tez_front/controller/auth_controller.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/register_page.dart';
 import 'package:tez_front/widgets/box_decoration.dart';
@@ -51,9 +51,8 @@ class FirstPage extends StatelessWidget {
                     CustomButton(
                         buttonText: buttonText,
                         onPressed: () {
-                          authController.login();
                           Get.to(
-                            const LoginPage(),
+                            LoginPage(),
                           );
                         }),
                     CustomButton(

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/pages/first_page.dart';
-
+import 'package:tez_front/pages/home_page.dart';
 import 'constants/color_constant.dart';
 
-void main() {
+Widget home = const FirstPage();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Database().init();
+  if (Database().isLogged()) {
+    home = const HomePage();
+  }
   runApp(const MyApp());
 }
 
@@ -28,7 +36,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
       ),
-      home: const FirstPage(),
+      home: home,
     );
   }
 }

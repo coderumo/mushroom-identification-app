@@ -15,15 +15,17 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: ProjectPaddings.buttonOutPadding,
-      child: ElevatedButton(
-        style: const ButtonStyle(
-          backgroundColor:
-              MaterialStatePropertyAll<Color>(ColorConstants.darkGreen),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          buttonText,
-          style: const TextStyle(color: Colors.black),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: 150, height: 40),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorConstants.darkGreen,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            buttonText,
+            style: const TextStyle(color: Colors.black),
+          ),
         ),
       ),
     );

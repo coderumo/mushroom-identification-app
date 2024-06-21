@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../pages/navigation_tab/profile_tab.dart';
 
 class UserTabController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetSingleTickerProviderStateMixin {
   late TabController tabController;
   RxInt tabIndex = 0.obs;
 

@@ -29,15 +29,29 @@ class MapPage extends StatelessWidget {
               target: LatLng(37.7749, -122.4194),
               zoom: 10,
             ),
-            markers: controller.selectedLocation.value != null
-                ? {
-                    Marker(
-                      markerId: const MarkerId('selectedLocation'),
-                      position: controller.selectedLocation.value!,
-                    ),
-                  }
-                : {},
+            markers: {
+              if (controller.selectedLocation.value != null)
+                Marker(
+                  markerId: const MarkerId('selectedLocation'),
+                  position: controller.selectedLocation.value!,
+                ),
+              ...controller.mushroomLocations.map((location) => Marker(
+                    markerId: MarkerId(location.toString()),
+                    position: location,
+                  )),
+            },
+            onTap: (LatLng latLng) async {
+              controller.selectedLocation.value = latLng;
+              await controller.getAddressFromLatLng(latLng);
+              controller.update();
+            },
           );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.check),
+        onPressed: () {
+          Navigator.pop(context, mapController.selectedLocation.value);
         },
       ),
     );

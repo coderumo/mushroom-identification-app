@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
-import 'package:tez_front/controller/auth_snackbar_controller.dart';
+import 'package:tez_front/controller/auth_controller.dart';
 import 'package:tez_front/controller/bottom_bar_controller.dart';
+import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/pages/navigation_tab/profile_tab.dart';
 import '../widgets/animated_bottom_bar.dart';
 import '../widgets/custom_app_bar.dart';
@@ -15,7 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BottomBarController controller = Get.put(BottomBarController());
-    final AuthController authController = Get.find();
+
     return SafeArea(
       child: Scaffold(
         appBar: const CustomAppBar(),
@@ -26,6 +27,7 @@ class HomePage extends StatelessWidget {
                 return const HomeTab();
               case 1:
                 return const UserTab();
+
               default:
                 return const SizedBox();
             }
@@ -35,10 +37,10 @@ class HomePage extends StatelessWidget {
           elevation: 3,
           backgroundColor: ColorConstants.darkGreen,
           onPressed: () {
-            if (authController.isGuest.value) {
-              authController.snackBar();
+            if (Database().isGuest()) {
+              Get.snackbar('Erişim Engellendi', 'Giriş yapmanız gerekmektedir');
             } else {
-              Get.to(const ShareMushroom());
+              Get.to(ShareMushroom());
             }
           },
           child: const Icon(

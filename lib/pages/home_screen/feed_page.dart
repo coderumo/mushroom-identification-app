@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/padding_constant.dart';
-import 'package:tez_front/controller/auth_snackbar_controller.dart';
+import 'package:tez_front/controller/auth_controller.dart';
+import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/widgets/custom_app_bar.dart';
 
 import '../../widgets/comment_widget.dart';
@@ -137,7 +138,7 @@ class _FeedCardState extends State<FeedCard> {
                   IconButton(
                     icon: const Icon(Icons.thumb_up),
                     onPressed: () {
-                      if (authController.isGuest.value) {
+                      if (Database().isGuest()) {
                         authController.snackBar();
                       } else {
                         //backende istek
@@ -148,7 +149,7 @@ class _FeedCardState extends State<FeedCard> {
                   IconButton(
                     icon: const Icon(Icons.comment),
                     onPressed: () {
-                      if (!authController.isGuest.value) {
+                      if (!Database().isGuest()) {
                         Get.bottomSheet(
                           GestureDetector(
                             onTap: () {
@@ -169,7 +170,7 @@ class _FeedCardState extends State<FeedCard> {
                   IconButton(
                     icon: const Icon(Icons.share),
                     onPressed: () {
-                      if (authController.isGuest.value) {
+                      if (Database().isGuest()) {
                         authController.snackBar();
                       } else {
                         //backende istek

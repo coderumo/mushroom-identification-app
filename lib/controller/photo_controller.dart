@@ -27,7 +27,7 @@ class PhotoController extends GetxController {
   }
 
   void cancel() {
-    return Get.back();
+    Get.back();
   }
 
   void saveAndShareImage() {
@@ -35,6 +35,13 @@ class PhotoController extends GetxController {
   }
 
   Future<void> pickImageGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      image.value = File(pickedFile.path);
+    }
+  }
+
+  Future<void> loadInitialImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       image.value = File(pickedFile.path);
