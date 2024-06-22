@@ -8,6 +8,7 @@ class AuthService {
   final String baseUrl = 'http://10.0.2.2:3000/';
   final String urlLogin = 'auth/login';
   final String urlRegister = 'auth/register';
+  final String urlMe = 'auth/me';
 
   Future<AuthResponse> register(
       String name, String userName, String email, String password) async {
@@ -80,6 +81,23 @@ class AuthService {
     } catch (e) {
       print('Error: $e');
       throw Exception('Giriş başarısız: $e');
+    }
+  }
+
+  Future<UserModel?> fetchUserProfile(String token) async {
+    final url = Uri.parse('$baseUrl$urlMe');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception('Failed to load user profile');
     }
   }
 }

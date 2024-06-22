@@ -9,40 +9,45 @@ class UserTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String name = 'Rumeysa Alkaya';
-    const String url = 'https://via.placeholder.com/150';
-    const double raidus = 60;
-
     UserTabController controller = Get.put(UserTabController());
 
-    return Column(
-      children: [
-        const CircleAvatar(
-          radius: raidus,
-          backgroundImage: NetworkImage(url),
-        ),
-        Padding(
-          padding: ProjectPaddings.paddingAll,
-          child: Text(
-            name,
-            style: Theme.of(context).textTheme.titleMedium,
+    return Obx(() {
+      // Kullanıcı bilgilerini dinamik olarak yükle
+      final user = controller.user.value;
+      final String name = user?.name ?? 'Kullanıcı Adı';
+      final String url =
+          user?.profileImage ?? 'https://via.placeholder.com/150';
+      const double radius = 60;
+
+      return Column(
+        children: [
+          CircleAvatar(
+            radius: radius,
+            backgroundImage: NetworkImage(url),
           ),
-        ),
-        TabBar(
-          controller: controller.tabController,
-          tabs: MyTabViews.values.map((e) => Tab(text: e.name)).toList(),
-        ),
-        Expanded(
-          child: TabBarView(
+          Padding(
+            padding: ProjectPaddings.paddingAll,
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          TabBar(
             controller: controller.tabController,
-            children: const [
-              _ImageListWidget(),
-              _ImageListWidget2(),
-            ],
+            tabs: MyTabViews.values.map((e) => Tab(text: e.name)).toList(),
           ),
-        ),
-      ],
-    );
+          Expanded(
+            child: TabBarView(
+              controller: controller.tabController,
+              children: const [
+                _ImageListWidget(),
+                _ImageListWidget2(),
+              ],
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 

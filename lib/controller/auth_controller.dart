@@ -19,7 +19,8 @@ class AuthController extends GetxController {
 
       if (response.success) {
         final token = ((response.data as Map<String, dynamic>)['token']);
-        Database().login(token);
+        final user = ((response.data as Map<String, dynamic>)['user']);
+        Database().login(token, user);
         Get.snackbar('Başarılı', 'Başarıyla giriş yapıldı');
         Get.offAll(const HomePage());
       } else {

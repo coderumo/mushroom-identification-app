@@ -221,7 +221,8 @@ class FeedList extends StatefulWidget {
 }
 
 class _FeedListState extends State<FeedList> {
-  late List<Post> posts = [];
+  final String _baseUrl = 'http://10.0.2.2:3000/post?relations=user';
+  late List<PostModel> posts = [];
 
   @override
   void initState() {
@@ -230,7 +231,7 @@ class _FeedListState extends State<FeedList> {
   }
 
   Future<void> fetchPosts() async {
-    var url = Uri.parse('http://10.0.2.2:3000/post');
+    var url = Uri.parse(_baseUrl);
     try {
       var token = Database().tokenBox.get('token');
       var response = await http.get(
@@ -279,7 +280,7 @@ class _FeedListState extends State<FeedList> {
 }
 
 class FeedCard extends StatelessWidget {
-  final Post post;
+  final PostModel post;
 
   const FeedCard({Key? key, required this.post}) : super(key: key);
 
@@ -293,10 +294,10 @@ class FeedCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: const CircleAvatar(
-                  // Burada kullanıcı avatarı olabilir
-                  ),
-              title: Text(post.userId), // Kullanıcı adı
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(post.user.profileImage),
+              ),
+              title: Text(post.user.name),
             ),
             Image.network(
               post.image,
@@ -307,29 +308,45 @@ class FeedCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(post.description),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.thumb_up),
-                  onPressed: () {
-                    // Beğeni işlemleri burada yapılabilir
-                  },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  _showCommentsSheet(context);
+                },
+                child: Text(
+                  'Yorumları Göster..',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColorDark,
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.comment),
-                  onPressed: () {
-                    // Yorumlar alt sayfasını aç
-                    _showCommentsSheet(context);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {
-                    // Paylaşma işlemleri burada yapılabilir
-                  },
-                ),
-              ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.thumb_up),
+                    onPressed: () {
+                      // Beğeni işlemleri burada yapılabilir
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.comment),
+                    onPressed: () {
+                      _showCommentsSheet(context);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.share),
+                    onPressed: () {
+                      // Paylaşma işlemleri burada yapılabilir
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

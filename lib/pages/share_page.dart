@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:tez_front/controller/post_controller.dart';
-import 'package:tez_front/models/post_model.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 
@@ -18,8 +17,7 @@ class _SharePageState extends State<SharePage> {
   final PostController postController = Get.put(PostController());
   final descriptionController = TextEditingController();
   final specieController = TextEditingController();
-  String city = '';
-  String district = '';
+  String konum = '';
   double latitude = 0.0;
   double longitude = 0.0;
   File? _image;
@@ -47,7 +45,6 @@ class _SharePageState extends State<SharePage> {
   //       district: district,
   //       latitude: latitude,
   //       longitude: longitude,
-  //       file: _image!,
   //     );
   //     postController.uploadPost(newPost);
   //   } else {
@@ -81,15 +78,13 @@ class _SharePageState extends State<SharePage> {
               decoration: const InputDecoration(labelText: 'Mantar Türü'),
             ),
             const SizedBox(height: 10),
-            Text('City: $city'),
-            Text('District: $district'),
+            Text('Konum: $konum'),
             CustomButton(
               onPressed: () async {
                 var location = await Get.to(() => const MapPage());
                 if (location != null) {
                   setState(() {
-                    city = location['city'];
-                    district = location['district'];
+                    konum = location['city'];
                     latitude = location['latitude'];
                     longitude = location['longitude'];
                   });

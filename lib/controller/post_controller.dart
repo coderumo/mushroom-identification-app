@@ -8,7 +8,7 @@ class PostController extends GetxController {
   var isLoading = false.obs;
   final Database db = Database();
 
-  Future<void> uploadPost(Post post) async {
+  Future<void> uploadPost(PostModel post) async {
     isLoading.value = true;
     var uri = Uri.parse('http://localhost:3000/post');
     var token = db.tokenBox.get('token') ?? '';
