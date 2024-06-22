@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
             if (Database().isGuest()) {
               Get.snackbar('Erişim Engellendi', 'Giriş yapmanız gerekmektedir');
             } else {
-              Get.to(ShareMushroom());
+              Get.to(const SharePage());
             }
           },
           child: const Icon(

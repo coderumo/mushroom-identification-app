@@ -8,9 +8,9 @@ class MapController extends GetxController {
   Rx<LatLng?> selectedLocation = Rx<LatLng?>(null);
   RxString address = ''.obs;
   final List<LatLng> mushroomLocations = [
-    const LatLng(37.7749, -122.4194), // Example location 1
-    const LatLng(34.0522, -118.2437), // Example location 2
-    const LatLng(40.7128, -74.0060), // Example location 3
+    const LatLng(37.7749, -122.4194),
+    const LatLng(34.0522, -118.2437),
+    const LatLng(40.7128, -74.0060),
   ];
 
   void onMapCreated(GoogleMapController controller) {
@@ -61,7 +61,8 @@ class MapController extends GetxController {
           await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
-        address.value = '${placemark.locality}, ${placemark.country}';
+        address.value =
+            '${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}';
       } else {
         address.value = 'Adres bulunamadı';
       }

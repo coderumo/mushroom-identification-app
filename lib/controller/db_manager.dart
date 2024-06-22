@@ -15,10 +15,7 @@ class Database {
     guestBox = await Hive.openBox('guest');
   }
 
-  void login(
-    String token,
-    // TODO: need useer get me
-  ) async {
+  void login(String token) async {
     guestBox.put('guest', false);
     tokenBox.put('token', token);
   }
@@ -29,7 +26,6 @@ class Database {
 
   bool isLogged() {
     return (tokenBox.get('token') != null);
-    //&&( userBox.get('user') != null);
   }
 
   void logout() {

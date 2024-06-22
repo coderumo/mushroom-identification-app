@@ -12,7 +12,7 @@ class HomeController extends GetxController {
     const Placeholder(), //öylesine
     const MapPage(),
     const Placeholder(),
-    const FeedTab()
+    const FeedList()
   ];
 
   void goToPage(int index) {
