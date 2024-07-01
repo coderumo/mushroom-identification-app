@@ -3,17 +3,19 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:tez_front/controller/post_controller.dart';
+import 'package:tez_front/models/post_model.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
+import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 
 class SharePage extends StatefulWidget {
   const SharePage({super.key});
 
   @override
-  _SharePageState createState() => _SharePageState();
+  SharePageState createState() => SharePageState();
 }
 
-class _SharePageState extends State<SharePage> {
+class SharePageState extends State<SharePage> {
   final PostController postController = Get.put(PostController());
   final descriptionController = TextEditingController();
   final specieController = TextEditingController();
@@ -21,10 +23,10 @@ class _SharePageState extends State<SharePage> {
   double latitude = 0.0;
   double longitude = 0.0;
   File? _image;
+  bool isLoading = false;
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -32,28 +34,13 @@ class _SharePageState extends State<SharePage> {
     });
   }
 
-  // void _sharePost() {
-  //   if (_image != null &&
-  //       descriptionController.text.isNotEmpty &&
-  //       specieController.text.isNotEmpty &&
-  //       city.isNotEmpty &&
-  //       district.isNotEmpty) {
-  //     final newPost = PostModel(
-  //       description: descriptionController.text,
-  //       specie: specieController.text,
-  //       city: city,
-  //       district: district,
-  //       latitude: latitude,
-  //       longitude: longitude,
-  //     );
-  //     postController.uploadPost(newPost);
-  //   } else {
-  //     Get.snackbar('Error', 'Please fill all the fields');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Share Post'),
@@ -64,7 +51,13 @@ class _SharePageState extends State<SharePage> {
           children: [
             _image == null
                 ? const Text('No image selected.')
-                : Image.file(_image!),
+                : SizedBox(
+                    height: 400,
+                    child: Image.file(
+                      _image!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
             CustomButton(
               onPressed: _pickImage,
               buttonText: 'Fotoğraf seç',
@@ -81,10 +74,11 @@ class _SharePageState extends State<SharePage> {
             Text('Konum: $konum'),
             CustomButton(
               onPressed: () async {
-                var location = await Get.to(() => const MapPage());
+                final location = await Get.to(() => const MapPage());
+                print(location);
                 if (location != null) {
                   setState(() {
-                    konum = location['city'];
+                    konum = "${location['city'] ?? ''}${location['city'] != null ? ',' : ''}${location['district'] ?? ''}";
                     latitude = location['latitude'];
                     longitude = location['longitude'];
                   });
@@ -92,14 +86,41 @@ class _SharePageState extends State<SharePage> {
               },
               buttonText: 'Konum İşaretle',
             ),
-            Obx(() {
-              return postController.isLoading.value
-                  ? const CircularProgressIndicator()
-                  : CustomButton(
-                      onPressed: () {},
-                      buttonText: 'Paylaş',
-                    );
-            }),
+            CustomButton(
+              onPressed: () async {
+                final requestModel = PostRequestModel(
+                  description: descriptionController.text,
+                  specie: specieController.text,
+                  place: konum,
+                  latitude: latitude.toString(),
+                  longitude: longitude.toString(),
+                );
+
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  AuthService authService = AuthService();
+                  final res = await authService.createPost(requestModel, _image!);
+                  if (res.success) {
+                    Get.snackbar('Success', 'Post created successfully');
+                  } else {
+                    Get.snackbar('Error', res.message);
+                  }
+                  setState(() {
+                    isLoading = false;
+                  });
+
+                  Get.back();
+                } catch (e) {
+                  Get.snackbar('Error', e.toString());
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              },
+              buttonText: 'Paylaş',
+            )
           ],
         ),
       ),

@@ -1,32 +1,30 @@
 import 'dart:convert';
 
-PostModel postModelFromJson(String str) => PostModel.fromJson(json.decode(str));
-
-String postModelToJson(PostModel data) => json.encode(data.toJson());
+/* {id: 459c9b8e-548f-41b2-8e15-d1f748b5d62d, description: karahan deniz görmüş , image: https://storage.googleapis.com/mush-app/mush-images/b8d5af54-21e4-4f4c-8bb0-767d452ea78f.jpg, place: , Atakum, latitude: 41.37, longtitude: null, userId: d214d84d-2635-41c9-8859-9bc24cad3e69, createdAt: 2024-07-01T12:21:32.879Z, updatedAt: 2024-07-01T12:21:32.879Z, deletedAt: null}*/
 
 class PostModel {
   final String id;
-  final String description;
+  final String? description;
   final String image;
-  final String latitude;
-  final dynamic longitude;
+  final String? place;
+  final String? latitude;
+  final String? longtitude;
   final String userId;
-  final String createdAt;
-  final String updatedAt;
-  final dynamic deletedAt;
-  final User user;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
 
   PostModel({
     required this.id,
     required this.description,
     required this.image,
+    required this.place,
     required this.latitude,
-    required this.longitude,
+    required this.longtitude,
     required this.userId,
     required this.createdAt,
     required this.updatedAt,
     required this.deletedAt,
-    required this.user,
   });
 
   factory PostModel.fromJson(Map<String, dynamic>? json) {
@@ -34,13 +32,13 @@ class PostModel {
       id: json?['id'] ?? '',
       description: json?['description'] ?? '',
       image: json?['image'] ?? '',
-      latitude: json?['latitude'] ?? '',
-      longitude: json?['longitude'],
+      place: json?['place'],
+      latitude: json?['latitude'],
+      longtitude: json?['longtitude'],
       userId: json?['userId'] ?? '',
-      createdAt: json?['createdAt'] ?? '',
-      updatedAt: json?['updatedAt'] ?? '',
-      deletedAt: json?['deletedAt'],
-      user: User.fromJson(json?['user'] ?? {}),
+      createdAt: DateTime.parse(json?['createdAt'] ?? ''),
+      updatedAt: json?['updatedAt'] != null ? DateTime.parse(json?['updatedAt']) : null,
+      deletedAt: json?['deletedAt'] != null ? DateTime.parse(json?['deletedAt']) : null,
     );
   }
 
@@ -48,14 +46,19 @@ class PostModel {
         'id': id,
         'description': description,
         'image': image,
+        'place': place,
         'latitude': latitude,
-        'longitude': longitude,
+        'longtitude': longtitude,
         'userId': userId,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        'deletedAt': deletedAt,
-        'user': user.toJson(),
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt?.toIso8601String(),
+        'deletedAt': deletedAt?.toIso8601String(),
       };
+
+  String time(DateTime? time) {
+    if (time == null) return '';
+    return "${time.day}/${time.month}/${time.year} ${time.hour}:${time.minute}";
+  }
 }
 
 class User {
@@ -106,4 +109,42 @@ class User {
         'updatedAt': updatedAt,
         'deletedAt': deletedAt,
       };
+}
+
+/*{
+                          'description': descriptionController.text,
+                          'specie': specieController.text,
+                          'place': konum,
+                          'latitude': latitude,
+                          'longitude': longitude,
+                         
+                        };*/
+
+class PostRequestModel {
+  final String description;
+  final String specie;
+  final String place;
+  final String latitude;
+  final String longitude;
+
+  PostRequestModel({
+    required this.description,
+    required this.specie,
+    required this.place,
+    required this.latitude,
+    required this.longitude,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'description': description,
+        'specie': specie,
+        'place': place,
+        'latitude': latitude,
+        'longitude': longitude,
+      };
+
+  @override
+  String toString() {
+    return 'PostRequestModel(description: $description, specie: $specie, place: $place, latitude: $latitude, longitude: $longitude)';
+  }
 }

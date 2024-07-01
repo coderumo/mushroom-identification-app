@@ -23,10 +23,11 @@ class _MapPageState extends State<MapPage> {
         children: [
           Obx(() {
             return GoogleMap(
+              myLocationButtonEnabled: false,
+              myLocationEnabled: true,
               onMapCreated: mapController.onMapCreated,
               initialCameraPosition: CameraPosition(
-                target: mapController.selectedLocation.value ??
-                    const LatLng(37.7749, -122.4194),
+                target: mapController.selectedLocation.value ?? const LatLng(41.36587581650286, 36.228993125259876),
                 zoom: 10,
               ),
               markers: {
@@ -39,6 +40,7 @@ class _MapPageState extends State<MapPage> {
               onTap: (LatLng latLng) async {
                 mapController.selectedLocation.value = latLng;
                 await mapController.getAddressFromLatLng(latLng);
+                print('${mapController.address.value} ${mapController.selectedLocation.value}');
               },
             );
           }),
@@ -51,15 +53,12 @@ class _MapPageState extends State<MapPage> {
                   Text('Adres: ${mapController.address.value}'),
                   ElevatedButton(
                     onPressed: () {
+                      print('${mapController.address.value} ${mapController.selectedLocation.value}');
                       Get.back(result: {
                         'city': mapController.address.value.split(',')[0],
                         'district': mapController.address.value.split(',')[1],
-                        'latitude':
-                            mapController.selectedLocation.value?.latitude ??
-                                0.0,
-                        'longitude':
-                            mapController.selectedLocation.value?.longitude ??
-                                0.0,
+                        'latitude': mapController.selectedLocation.value?.latitude ?? 0.0,
+                        'longitude': mapController.selectedLocation.value?.longitude ?? 0.0,
                       });
                     },
                     child: const Text('Konumu Onayla'),

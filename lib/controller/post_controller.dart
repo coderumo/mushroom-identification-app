@@ -14,7 +14,7 @@ class PostController extends GetxController {
     var token = db.tokenBox.get('token') ?? '';
 
     var request = http.MultipartRequest('POST', uri)
-      ..fields['description'] = post.description
+      ..fields['description'] = post.description ?? ''
       ..headers['Authorization'] = 'Bearer $token';
 
     var response = await request.send();

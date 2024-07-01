@@ -9,6 +9,8 @@ import '../widgets/box_decoration.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_button.dart';
 
+final formKey = GlobalKey<FormState>();
+
 class LoginPage extends StatelessWidget {
   final AuthController _authController = Get.put(AuthController());
 
@@ -16,10 +18,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-
     const labelText = 'E-Mail';
     const labelTextPassword = 'Password';
     const buttonText = 'Giriş';
@@ -57,12 +55,11 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
-                        controller: emailController,
+                        controller: _authController.emailController,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
                           labelText: labelText,
                         ),
-                        textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -74,27 +71,19 @@ class LoginPage extends StatelessWidget {
                         },
                       ),
                       TextFormField(
-                        controller: passwordController,
+                        controller: _authController.passwordController,
                         obscureText: true,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.password),
                           labelText: labelTextPassword,
                         ),
-                        textInputAction: TextInputAction.done,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return password;
-                          }
-                          return null;
-                        },
                       ),
                       CustomButton(
                         buttonText: buttonText,
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             _authController.login(
-                              emailController.text,
-                              passwordController.text,
+                              
                             );
                           }
                         },

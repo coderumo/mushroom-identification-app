@@ -205,6 +205,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:tez_front/controller/user_tab_controller.dart';
 import 'dart:convert';
 
 import 'package:tez_front/models/post_api_response.dart';
@@ -217,45 +218,32 @@ class FeedList extends StatefulWidget {
   const FeedList({Key? key}) : super(key: key);
 
   @override
-  _FeedListState createState() => _FeedListState();
+  FeedListState createState() => FeedListState();
 }
 
-class _FeedListState extends State<FeedList> {
-  final String _baseUrl = 'http://10.0.2.2:3000/post?relations=user';
-  late List<PostModel> posts = [];
+class FeedListState extends State<FeedList> {
+  List<PostModel> posts = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchPosts();
+    getposts();
   }
 
-  Future<void> fetchPosts() async {
-    var url = Uri.parse(_baseUrl);
-    try {
-      var token = Database().tokenBox.get('token');
-      var response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+  void getposts() async {
+    setState(() {
+      isLoading = true;
+    });
+    final res = await UserTabController().authService.getPost();
+    if (res.success) {
+      final data = res.data['data'] as List;
 
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        var jsonResponse = json.decode(response.body);
-        ApiResponse apiResponse = ApiResponse.fromJson(jsonResponse);
-        setState(() {
-          posts = apiResponse.posts;
-        });
-      } else {
-        throw Exception('Gönderiler yüklenirken hata oluştu');
-      }
-    } catch (e) {
-      print('Veri çekerken hata oluştu: $e');
+      final items = data.map((e) => PostModel.fromJson(e)).toList();
+      setState(() {
+        posts = items;
+        isLoading = false;
+      });
     }
   }
 
@@ -265,7 +253,7 @@ class _FeedListState extends State<FeedList> {
       appBar: AppBar(
         title: const Text('Feed'),
       ),
-      body: posts.isEmpty
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: posts.length,
@@ -293,12 +281,12 @@ class FeedCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(post.user.profileImage),
-              ),
-              title: Text(post.user.name),
-            ),
+            // ListTile(
+            //   leading: CircleAvatar(
+            //     backgroundImage: NetworkImage(post.user.profileImage),
+            //   ),
+            //   title: Text(post.user.name),
+            // ),
             Image.network(
               post.image,
               width: double.infinity,
@@ -306,7 +294,7 @@ class FeedCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(post.description),
+              child: Text(post.description ?? ''),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
