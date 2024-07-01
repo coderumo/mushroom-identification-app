@@ -9,6 +9,7 @@ import '../models/auth_response.dart';
 
 class AuthService {
   final String baseUrl = 'http://93.190.8.108:3000/';
+  final String secondaryUrl = 'http://93.190.8.108:5000/classify';
   final String urlLogin = 'auth/login';
   final String urlRegister = 'auth/register';
   final String urlMe = 'auth/me';
@@ -165,6 +166,23 @@ class AuthService {
       final errorResponse = json.decode(responseString);
       final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
       throw Exception('Post Yüklenirken hata: $errorMessage');
+    }
+  }
+
+  Future<Map<dynamic, dynamic>> classifyImage(File image) async {
+    final url = Uri.parse(secondaryUrl);
+    final request = http.MultipartRequest('POST', url)..files.add(await http.MultipartFile.fromPath('photo', image.path));
+
+    final response = await request.send();
+    final responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = json.decode(responseString);
+      return data;
+    } else {
+      final errorResponse = json.decode(responseString);
+      final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
+      throw Exception('Resim sınıflandırılırken hata: $errorMessage');
     }
   }
 }

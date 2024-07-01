@@ -8,17 +8,22 @@ class PhotoController extends GetxController {
 
   final RxBool isCameraReady = false.obs;
 
-  Future<void> openCamera() async {
+  Future<File?> openCamera() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+      print(pickedFile);
       if (pickedFile != null) {
-        image.value = File(pickedFile.path);
+        final image = File(pickedFile.path);
         isCameraReady.value = true;
+        this.image.value = image;
+        return image;
       } else {
         print('No image selected.');
       }
+      return null;
     } catch (e) {
       print('Error opening camera: $e');
+      return null;
     }
   }
 
@@ -34,11 +39,13 @@ class PhotoController extends GetxController {
     // Fotoğrafı kaydetme ve paylaşma işlemi
   }
 
-  Future<void> pickImageGallery() async {
+  Future<File?> pickImageGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       image.value = File(pickedFile.path);
+      return image.value;
     }
+    return null;
   }
 
   Future<void> loadInitialImage() async {

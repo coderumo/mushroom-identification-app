@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/constants/color_constant.dart';
@@ -6,8 +8,16 @@ import 'package:tez_front/widgets/custom_button.dart';
 import '../controller/photo_controller.dart';
 
 class ResultMushroom extends StatelessWidget {
+  final String title;
+  final String subTitle;
+  final String bodyText;
+  final File image;
   const ResultMushroom({
     Key? key,
+    required this.title,
+    required this.subTitle,
+    required this.bodyText,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -16,9 +26,6 @@ class ResultMushroom extends StatelessWidget {
     final double deviceHeight = mediaQueryData.size.height;
     final double deviceWidth = mediaQueryData.size.width;
 
-    const title = 'MANTAR ADI';
-    const subTitle = 'Zehirli/Zehirsiz';
-    final bodyText = 'deneme ' * 100;
     const buttonText = 'Kaydet ve Paylaş';
     const buttonText2 = 'Kaydet';
     const buttonText3 = 'İptal';
@@ -41,8 +48,8 @@ class ResultMushroom extends StatelessWidget {
                     children: [
                       Positioned.fill(
                         child: Image.file(
+                          image,
                           fit: BoxFit.fill,
-                          photoController.image.value!,
                         ),
                       )
                     ],
@@ -51,25 +58,13 @@ class ResultMushroom extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: ColorConstants.darkGreen, width: 2)),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30))),
+                    decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: ColorConstants.darkGreen, width: 2)), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CustomButton(
-                            buttonText: buttonText,
-                            onPressed: photoController.saveAndShareImage),
-                        CustomButton(
-                            buttonText: buttonText2,
-                            onPressed: photoController.saveAndShareImage),
-                        CustomButton(
-                            buttonText: buttonText3,
-                            onPressed: photoController.cancel),
+                        CustomButton(buttonText: buttonText, onPressed: photoController.saveAndShareImage),
+                        CustomButton(buttonText: buttonText2, onPressed: photoController.saveAndShareImage),
+                        CustomButton(buttonText: buttonText3, onPressed: photoController.cancel),
                       ],
                     ),
                   ),
@@ -78,11 +73,11 @@ class ResultMushroom extends StatelessWidget {
                   flex: 4,
                   child: ListView(
                     children: [
-                      const _TitleWidget(title: title),
+                       _TitleWidget(title: title),
                       const SizedBox(
                         height: 10,
                       ),
-                      const _SubTitleWidget(subTitle: subTitle),
+                       _SubTitleWidget(subTitle: subTitle),
                       _TextWidget(bodyText: bodyText),
                     ],
                   ),
@@ -107,10 +102,7 @@ class _TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       bodyText,
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.w400),
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w400),
     );
   }
 }
@@ -126,10 +118,7 @@ class _SubTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       subTitle,
-      style: Theme.of(context)
-          .textTheme
-          .titleLarge
-          ?.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
     );
   }
 }
@@ -146,10 +135,7 @@ class _TitleWidget extends StatelessWidget {
     return Text(
       textAlign: TextAlign.center,
       title,
-      style: Theme.of(context)
-          .textTheme
-          .headlineSmall
-          ?.copyWith(fontWeight: FontWeight.w600),
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 }
