@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/constants/padding_constant.dart';
 import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
@@ -20,29 +21,64 @@ class UserTab extends StatelessWidget {
       // Kullanıcı bilgilerini dinamik olarak yükle
       final user = controller.user.value;
       final String name = user?.name ?? 'Kullanıcı Adı';
-      final String url = user?.profileImage ?? 'https://via.placeholder.com/150';
+      final String url =
+          user?.profileImage ?? 'https://via.placeholder.com/150';
       const double radius = 60;
 
       return Column(
         children: [
-          InkWell(
-            onTap: () async {
-              final XFile? image = await controller.pickImage();
-              if (image == null) {
-                return;
-              }
-              final res = await controller.authService.setProfileImage(File(image.path));
-              if (res.success) {
-                Get.snackbar('Başarılı', 'Profil resmi güncellendi');
-              } else {
-                Get.snackbar(res.message, res.message);
-              }
-              await controller.fetchUserProfile();
-            },
-            child: CircleAvatar(
-              radius: radius,
-              backgroundImage: NetworkImage(url),
-            ),
+          Stack(
+            children: [
+              InkWell(
+                onTap: () async {
+                  final XFile? image = await controller.pickImage();
+                  if (image == null) {
+                    return;
+                  }
+                  final res = await controller.authService
+                      .setProfileImage(File(image.path));
+                  if (res.success) {
+                    Get.snackbar('Başarılı', 'Profil resmi güncellendi');
+                  } else {
+                    Get.snackbar(res.message, res.message);
+                  }
+                  await controller.fetchUserProfile();
+                },
+                child: CircleAvatar(
+                  radius: radius,
+                  backgroundImage: NetworkImage(url),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: InkWell(
+                  onTap: () async {
+                    final XFile? image = await controller.pickImage();
+                    if (image == null) {
+                      return;
+                    }
+                    final res = await controller.authService
+                        .setProfileImage(File(image.path));
+                    if (res.success) {
+                      Get.snackbar('Başarılı', 'Profil resmi güncellendi');
+                    } else {
+                      Get.snackbar(res.message, res.message);
+                    }
+                    await controller.fetchUserProfile();
+                  },
+                  child: CircleAvatar(
+                    radius: radius * 0.3,
+                    backgroundColor: ColorConstants.darkGreen.withOpacity(0.8),
+                    child: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: radius * 0.4,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: ProjectPaddings.paddingAll,
@@ -53,7 +89,11 @@ class UserTab extends StatelessWidget {
           ),
           TabBar(
             controller: controller.tabController,
-            tabs: MyTabViews.values.map((e) => Tab(text: e.name)).toList().reversed.toList(),
+            tabs: MyTabViews.values
+                .map((e) => Tab(text: e.name))
+                .toList()
+                .reversed
+                .toList(),
           ),
           Expanded(
             child: TabBarView(
@@ -118,10 +158,7 @@ class _SavedPostWidgetState extends State<SavedPostWidget> {
   }
 }
 
-enum MyTabViews {
-  Kaydedilenler,
-  Paylasilanlar
-}
+enum MyTabViews { Kaydedilenler, Paylasilanlar }
 
 extension MyTabViewExtension on MyTabViews {}
 

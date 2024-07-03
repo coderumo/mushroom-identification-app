@@ -15,8 +15,8 @@ class HomeTab extends StatelessWidget {
           absorbing: homeController.loading.value,
           child: Center(
             child: SizedBox(
-              width: size.width * 0.8,
-              height: size.height * 0.6,
+              width: size.width,
+              height: size.height,
               child: GridView.count(
                 crossAxisCount: 2,
                 padding: const EdgeInsets.only(top: 100),
