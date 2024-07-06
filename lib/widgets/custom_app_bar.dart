@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/pages/first_page.dart';
+import '../controller/db_manager.dart';
 import '../pages/notification_dialog.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -40,7 +41,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             onPressed: () {
-              Get.off(const FirstPage());
+              Database.instance.logout();
+              Get.offAll(const FirstPage());
             },
             icon: const Icon(Icons.exit_to_app),
           ),

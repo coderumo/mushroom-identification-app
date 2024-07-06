@@ -105,9 +105,9 @@ class SharePageState extends State<SharePage> {
                   final res =
                       await authService.createPost(requestModel, _image!);
                   if (res.success) {
-                    Get.snackbar('Success', 'Post created successfully');
+                    Get.snackbar('Başarılı', 'Gönderi başarıyla paylaşıldı');
                   } else {
-                    Get.snackbar('Error', res.message);
+                    Get.snackbar('Hata', res.message);
                   }
                   setState(() {
                     isLoading = false;
@@ -115,7 +115,7 @@ class SharePageState extends State<SharePage> {
 
                   Get.back();
                 } catch (e) {
-                  Get.snackbar('Error', e.toString());
+                  Get.snackbar('Hata', e.toString());
                   setState(() {
                     isLoading = false;
                   });

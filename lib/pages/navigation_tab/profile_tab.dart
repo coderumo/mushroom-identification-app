@@ -7,6 +7,7 @@ import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/constants/padding_constant.dart';
 import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
+import 'package:tez_front/models/classify_model.dart';
 import 'package:tez_front/models/post_api_response.dart';
 import 'package:tez_front/models/post_model.dart';
 
@@ -203,6 +204,10 @@ class _MushroomCard extends StatelessWidget {
             children: [
               Column(
                 children: [
+                  Text(
+                    _model.trueLabels,
+                    style: const TextStyle(color: Colors.black),
+                  ),
                   Expanded(
                     child: Image.network(
                       _model.image,
@@ -214,6 +219,11 @@ class _MushroomCard extends StatelessWidget {
                     children: [
                       Text(_model.time(_model.createdAt)),
                       Text(_model.place ?? ''),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(_model.canEat ? "Yenilebilir" : "Yenilemez"),
                     ],
                   ),
                 ],

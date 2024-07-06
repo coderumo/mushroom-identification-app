@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 /* {id: 459c9b8e-548f-41b2-8e15-d1f748b5d62d, description: karahan deniz görmüş , image: https://storage.googleapis.com/mush-app/mush-images/b8d5af54-21e4-4f4c-8bb0-767d452ea78f.jpg, place: , Atakum, latitude: 41.37, longtitude: null, userId: d214d84d-2635-41c9-8859-9bc24cad3e69, createdAt: 2024-07-01T12:21:32.879Z, updatedAt: 2024-07-01T12:21:32.879Z, deletedAt: null}*/
-
 class PostModel {
   final String id;
   final String? description;
@@ -13,6 +12,8 @@ class PostModel {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
+  final bool canEat; // Yeni alan
+  final String trueLabels; // Yeni alan
 
   PostModel({
     required this.id,
@@ -25,6 +26,8 @@ class PostModel {
     required this.createdAt,
     required this.updatedAt,
     required this.deletedAt,
+    required this.canEat, // Yeni alan
+    required this.trueLabels, // Yeni alan
   });
 
   factory PostModel.fromJson(Map<String, dynamic>? json) {
@@ -37,8 +40,14 @@ class PostModel {
       longtitude: json?['longtitude'],
       userId: json?['userId'] ?? '',
       createdAt: DateTime.parse(json?['createdAt'] ?? ''),
-      updatedAt: json?['updatedAt'] != null ? DateTime.parse(json?['updatedAt']) : null,
-      deletedAt: json?['deletedAt'] != null ? DateTime.parse(json?['deletedAt']) : null,
+      updatedAt: json?['updatedAt'] != null
+          ? DateTime.parse(json?['updatedAt'])
+          : null,
+      deletedAt: json?['deletedAt'] != null
+          ? DateTime.parse(json?['deletedAt'])
+          : null,
+      canEat: json?['canEat'] ?? false, // Yeni alan
+      trueLabels: json?['true_labels'] ?? '', // Yeni alan
     );
   }
 
@@ -53,62 +62,14 @@ class PostModel {
         'createdAt': createdAt.toIso8601String(),
         'updatedAt': updatedAt?.toIso8601String(),
         'deletedAt': deletedAt?.toIso8601String(),
+        'canEat': canEat,
+        'true_labels': trueLabels,
       };
 
   String time(DateTime? time) {
     if (time == null) return '';
     return "${time.day}/${time.month}/${time.year} ${time.hour}:${time.minute}";
   }
-}
-
-class User {
-  final String id;
-  final String name;
-  final String? userName;
-  final String email;
-  final String password;
-  final String profileImage;
-  final String createdAt;
-  final String updatedAt;
-  final dynamic deletedAt;
-
-  User({
-    required this.id,
-    required this.name,
-    required this.userName,
-    required this.email,
-    required this.password,
-    required this.profileImage,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.deletedAt,
-  });
-
-  factory User.fromJson(Map<String, dynamic>? json) {
-    return User(
-      id: json?['id'] ?? '',
-      name: json?['name'] ?? '',
-      userName: json?['userName'],
-      email: json?['email'] ?? '',
-      password: json?['password'] ?? '',
-      profileImage: json?['profileImage'] ?? '',
-      createdAt: json?['createdAt'] ?? '',
-      updatedAt: json?['updatedAt'] ?? '',
-      deletedAt: json?['deletedAt'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'userName': userName,
-        'email': email,
-        'password': password,
-        'profileImage': profileImage,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        'deletedAt': deletedAt,
-      };
 }
 
 /*{
