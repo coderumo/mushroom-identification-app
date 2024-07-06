@@ -5,7 +5,7 @@ import 'package:tez_front/models/user_model.dart';
 import 'package:tez_front/pages/home_page.dart';
 import 'package:tez_front/pages/login_page.dart';
 import '../services/auth_service.dart';
-import '../models/auth_response.dart';
+import '../models/general_response.dart';
 
 class AuthController extends GetxController {
   var isGuest = false.obs;
@@ -40,9 +40,11 @@ class AuthController extends GetxController {
     }
   }
 
-  void register(String name, String userName, String email, String password) async {
+  void register(
+      String name, String userName, String email, String password) async {
     try {
-      GeneralResponse response = await _authService.register(name, userName, email, password);
+      GeneralResponse response =
+          await _authService.register(name, userName, email, password);
 
       if (response.success) {
         Get.snackbar('Başarılı', 'Kayıt başarılı');

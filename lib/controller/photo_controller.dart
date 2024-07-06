@@ -27,16 +27,8 @@ class PhotoController extends GetxController {
     }
   }
 
-  void saveImage() {
-    // Fotoğrafı kaydetme işlemi
-  }
-
   void cancel() {
     Get.back();
-  }
-
-  void saveAndShareImage() {
-    // Fotoğrafı kaydetme ve paylaşma işlemi
   }
 
   Future<File?> pickImageGallery() async {

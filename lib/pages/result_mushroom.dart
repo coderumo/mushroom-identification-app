@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tez_front/constants/color_constant.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tez_front/controller/map_controller.dart';
+import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/widgets/custom_button.dart';
 
+import '../constants/color_constant.dart';
 import '../controller/photo_controller.dart';
+import '../models/post_model.dart';
 
-class ResultMushroom extends StatelessWidget {
+class ResultMushroom extends StatefulWidget {
   final String title;
   final String subTitle;
   final String bodyText;
@@ -21,6 +25,19 @@ class ResultMushroom extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ResultMushroom> createState() => _ResultMushroomState();
+}
+
+class _ResultMushroomState extends State<ResultMushroom> {
+  final AuthService authService = AuthService();
+  final descriptionController = TextEditingController();
+  final specieController = TextEditingController();
+  PhotoController photoController = Get.find();
+  MapController mapController = Get.put(MapController());
+  String address = '';
+  LatLng? selectedLocation;
+
+  @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
@@ -29,8 +46,6 @@ class ResultMushroom extends StatelessWidget {
     const buttonText = 'Kaydet ve Paylaş';
     const buttonText2 = 'Kaydet';
     const buttonText3 = 'İptal';
-
-    PhotoController photoController = Get.find();
 
     return Scaffold(
       body: Obx(
@@ -48,7 +63,7 @@ class ResultMushroom extends StatelessWidget {
                     children: [
                       Positioned.fill(
                         child: Image.file(
-                          image,
+                          widget.image,
                           fit: BoxFit.fill,
                         ),
                       )
@@ -58,13 +73,57 @@ class ResultMushroom extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: ColorConstants.darkGreen, width: 2)), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30))),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorConstants.darkGreen,
+                          width: 2,
+                        ),
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CustomButton(buttonText: buttonText, onPressed: photoController.saveAndShareImage),
-                        CustomButton(buttonText: buttonText2, onPressed: photoController.saveAndShareImage),
-                        CustomButton(buttonText: buttonText3, onPressed: photoController.cancel),
+                        CustomButton(
+                          buttonText: buttonText,
+                          onPressed: () async {
+                            await mapController.getCurrentLocation();
+                            if (mapController.selectedLocation.value != null) {
+                              setState(() {
+                                address = mapController.address.value;
+                                selectedLocation =
+                                    mapController.selectedLocation.value;
+                              });
+                              await savePost();
+                            } else {
+                              Get.snackbar('Hata', 'Konum alınamadı.');
+                            }
+                          },
+                        ),
+                        CustomButton(
+                          buttonText: buttonText2,
+                          onPressed: () async {
+                            await mapController.getCurrentLocation();
+                            if (mapController.selectedLocation.value != null) {
+                              setState(() {
+                                address = mapController.address.value;
+                                selectedLocation =
+                                    mapController.selectedLocation.value;
+                              });
+                              await savePost();
+                            } else {
+                              Get.snackbar('Hata', 'Konum alınamadı.');
+                            }
+                          },
+                        ),
+                        CustomButton(
+                          buttonText: buttonText3,
+                          onPressed: photoController.cancel,
+                        ),
                       ],
                     ),
                   ),
@@ -73,12 +132,13 @@ class ResultMushroom extends StatelessWidget {
                   flex: 4,
                   child: ListView(
                     children: [
-                       _TitleWidget(title: title),
+                      _TitleWidget(title: widget.title),
                       const SizedBox(
                         height: 10,
                       ),
-                       _SubTitleWidget(subTitle: subTitle),
-                      _TextWidget(bodyText: bodyText),
+                      _SubTitleWidget(subTitle: widget.subTitle),
+                      _TextWidget(bodyText: widget.bodyText),
+                      if (address.isNotEmpty) Text('Adres: $address'),
                     ],
                   ),
                 )
@@ -88,6 +148,22 @@ class ResultMushroom extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> savePost() async {
+    final postRequestModel = PostRequestModel(
+      description: descriptionController.text,
+      specie: specieController.text,
+      place: address,
+      latitude: selectedLocation?.latitude.toString() ?? '',
+      longitude: selectedLocation?.longitude.toString() ?? '',
+    );
+    try {
+      await authService.createDraft(postRequestModel, widget.image);
+      Get.snackbar('Başarılı', 'Gönderi başarıyla kaydedildi.');
+    } catch (e) {
+      Get.snackbar('Hata', 'Gönderi kaydedilirken bir hata oluştu: $e');
+    }
   }
 }
 
@@ -102,7 +178,10 @@ class _TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       bodyText,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w400),
+      style: Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(fontWeight: FontWeight.w400),
     );
   }
 }
@@ -118,7 +197,10 @@ class _SubTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       subTitle,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(context)
+          .textTheme
+          .titleLarge
+          ?.copyWith(fontWeight: FontWeight.w500),
     );
   }
 }
@@ -133,9 +215,12 @@ class _TitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      textAlign: TextAlign.center,
       title,
-      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
+      textAlign: TextAlign.center,
+      style: Theme.of(context)
+          .textTheme
+          .headlineSmall
+          ?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 }
