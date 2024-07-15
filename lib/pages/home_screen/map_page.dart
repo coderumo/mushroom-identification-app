@@ -17,7 +17,14 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Location'),
+        title: const Text('Mantar Konum'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                mapController.getCurrentLocation();
+              },
+              icon: const Icon(Icons.my_location))
+        ],
       ),
       body: Stack(
         children: [
@@ -27,7 +34,8 @@ class _MapPageState extends State<MapPage> {
               myLocationEnabled: true,
               onMapCreated: mapController.onMapCreated,
               initialCameraPosition: CameraPosition(
-                target: mapController.selectedLocation.value ?? const LatLng(41.36587581650286, 36.228993125259876),
+                target: mapController.selectedLocation.value ??
+                    const LatLng(41.36587581650286, 36.228993125259876),
                 zoom: 10,
               ),
               markers: {
@@ -40,25 +48,43 @@ class _MapPageState extends State<MapPage> {
               onTap: (LatLng latLng) async {
                 mapController.selectedLocation.value = latLng;
                 await mapController.getAddressFromLatLng(latLng);
-                print('${mapController.address.value} ${mapController.selectedLocation.value}');
+                print(
+                    '${mapController.address.value} ${mapController.selectedLocation.value}');
               },
             );
           }),
           Positioned(
-            bottom: 50,
+            bottom: 30,
             left: 10,
             child: Obx(() {
               return Column(
                 children: [
-                  Text('Adres: ${mapController.address.value}'),
+                  Container(
+                    color: Colors.white,
+                    child: Text(
+                      'Adres: ${mapController.address.value}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   ElevatedButton(
                     onPressed: () {
-                      print('${mapController.address.value} ${mapController.selectedLocation.value}');
+                      print(
+                          '${mapController.address.value} ${mapController.selectedLocation.value}');
+                      List<String> addressParts =
+                          mapController.address.value.split('');
+                      String city =
+                          addressParts.length > 1 ? addressParts[1] : '';
+                      String district = addressParts[0];
+
                       Get.back(result: {
-                        'city': mapController.address.value.split(',')[0],
-                        'district': mapController.address.value.split(',')[1],
-                        'latitude': mapController.selectedLocation.value?.latitude ?? 0.0,
-                        'longitude': mapController.selectedLocation.value?.longitude ?? 0.0,
+                        'city': city,
+                        'district': district,
+                        'latitude':
+                            mapController.selectedLocation.value?.latitude ??
+                                0.0,
+                        'longitude':
+                            mapController.selectedLocation.value?.longitude ??
+                                0.0,
                       });
                     },
                     child: const Text('Konumu Onayla'),
@@ -68,10 +94,6 @@ class _MapPageState extends State<MapPage> {
             }),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: mapController.getCurrentLocation,
-        child: const Icon(Icons.my_location),
       ),
     );
   }

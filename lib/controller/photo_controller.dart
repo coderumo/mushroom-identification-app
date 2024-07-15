@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tez_front/pages/home_page.dart';
+import 'package:tez_front/pages/navigation_tab/home_tab.dart';
 
 class PhotoController extends GetxController {
   Rx<File?> image = Rx<File?>(null);
@@ -28,7 +30,7 @@ class PhotoController extends GetxController {
   }
 
   void cancel() {
-    Get.back();
+    Get.offAll(const HomePage());
   }
 
   Future<File?> pickImageGallery() async {

@@ -205,6 +205,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 import 'dart:convert';
 
@@ -251,7 +252,9 @@ class FeedListState extends State<FeedList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: const Text(
+          'Mantar Keşfet',
+        ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

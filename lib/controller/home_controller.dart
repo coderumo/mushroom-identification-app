@@ -5,6 +5,7 @@ import 'package:tez_front/controller/photo_controller.dart';
 import 'package:tez_front/pages/home_screen/feed_page.dart';
 import 'package:tez_front/pages/result_mushroom.dart';
 import 'package:tez_front/services/auth_service.dart';
+import 'package:tez_front/controller/db_manager.dart';
 
 class HomeController extends GetxController {
   final PhotoController photoController = Get.put(PhotoController());
@@ -56,6 +57,14 @@ class HomeController extends GetxController {
         subTitle: res['canEat'] ? 'Yenebilir' : 'Yenmesi Tavsiye Edilmez',
         image: image,
       ));
+    } else if (index == 3 && Database.instance.isGuest()) {
+      Get.snackbar(
+        'Erişim Engellendi',
+        'Giriş yapmanız gerekmektedir',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } else {
       Get.to(pages[index], transition: Transition.leftToRight);
     }

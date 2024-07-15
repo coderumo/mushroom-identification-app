@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/pages/first_page.dart';
 import 'package:tez_front/pages/home_page.dart';
+import 'package:tez_front/theme.dart';
 import 'constants/color_constant.dart';
 
 Widget home = const FirstPage();
@@ -26,16 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: title,
-      theme: ThemeData.light().copyWith(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          actionsIconTheme: IconThemeData(
-            color: ColorConstants.darkGreen,
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
       home: home,
     );
   }

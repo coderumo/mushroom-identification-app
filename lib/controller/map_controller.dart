@@ -7,6 +7,7 @@ class MapController extends GetxController {
   GoogleMapController? googleMapController;
   Rx<LatLng?> selectedLocation = Rx<LatLng?>(null);
   RxString address = ''.obs;
+
   final List<LatLng> mushroomLocations = [
     const LatLng(37.7749, -122.4194),
     const LatLng(34.0522, -118.2437),

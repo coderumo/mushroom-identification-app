@@ -11,8 +11,8 @@ import 'package:tez_front/models/classify_model.dart';
 import 'package:tez_front/models/post_api_response.dart';
 import 'package:tez_front/models/post_model.dart';
 
-class UserTab extends StatelessWidget {
-  const UserTab({Key? key}) : super(key: key);
+class ProfileTab extends StatelessWidget {
+  const ProfileTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

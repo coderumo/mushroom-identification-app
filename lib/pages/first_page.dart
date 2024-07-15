@@ -6,6 +6,7 @@ import 'package:tez_front/pages/register_page.dart';
 import 'package:tez_front/widgets/box_decoration.dart';
 import 'package:tez_front/widgets/custom_text_button.dart';
 import 'package:tez_front/constants/padding_constant.dart';
+import '../controller/db_manager.dart';
 import '../widgets/custom_button.dart';
 import 'login_page.dart';
 
@@ -65,8 +66,8 @@ class FirstPage extends StatelessWidget {
                     ),
                     CustomTextButton(
                       text: textButton,
-                      onPressed: () {
-                        authController.continueAsGuest();
+                      onPressed: () async {
+                        await Database.instance.continueAsGuest();
                         Get.to(const HomePage());
                       },
                     ),

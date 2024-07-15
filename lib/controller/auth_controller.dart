@@ -13,10 +13,6 @@ class AuthController extends GetxController {
   var passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  void continueAsGuest() {
-    isGuest.value = true;
-  }
-
   void login() async {
     try {
       final email = emailController.text;

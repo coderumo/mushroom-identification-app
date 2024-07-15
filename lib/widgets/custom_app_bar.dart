@@ -11,10 +11,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final double deviceHeight = mediaQueryData.size.height;
     const String projectLogo = 'assets/images/logo-g.png';
     const String noNotification = 'assets/images/no-spam.png';
 
-    const double logoSize = 40;
+    double logoSize = deviceHeight / 24;
 
     final List<String> notifications = []; // Bildirim metinleri burada.
     const String notificationMessage = 'Bildirim yok';

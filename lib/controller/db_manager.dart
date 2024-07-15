@@ -17,12 +17,23 @@ class Database {
     tokenBox = await Hive.openBox('token');
     guestBox = await Hive.openBox('guest');
     userBox = await Hive.openBox<String>('user'); // UserModel için Box açılıyor
+    // İlk açılışta guestBox'ı false olarak ayarlayın
+    if (guestBox.get('guest') == null) {
+      await guestBox.put('guest', false);
+    }
   }
 
   void login(String token, UserModel user) {
     guestBox.put('guest', false);
     tokenBox.put('token', token);
-    userBox.put('user', jsonEncode(user.toJson())); // UserModel json formatına çevirilerek kaydediliyor
+    userBox.put(
+        'user',
+        jsonEncode(user
+            .toJson())); // UserModel json formatına çevirilerek kaydediliyor
+  }
+
+  Future<void> continueAsGuest() {
+    return guestBox.put('guest', true);
   }
 
   bool isGuest() {
