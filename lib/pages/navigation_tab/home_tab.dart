@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/controller/home_controller.dart';
+import '../../constants/color_constant.dart';
 import '../../widgets/custom_card_home_page.dart';
 
 class HomeTab extends StatelessWidget {
@@ -51,7 +53,10 @@ class HomeTab extends StatelessWidget {
         Obx(() {
           if (homeController.loading.value) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitFadingCircle(
+                color: ColorConstants.darkGreen,
+                size: 50.0,
+              ),
             );
           } else {
             return const SizedBox();

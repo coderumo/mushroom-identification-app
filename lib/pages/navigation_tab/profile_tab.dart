@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tez_front/constants/color_constant.dart';
@@ -273,7 +274,12 @@ class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: SpinKitFadingCircle(
+          color: ColorConstants.darkGreen,
+          size: 50.0,
+        ),
+      );
     }
     return ListView.builder(
       itemCount: _items.length,

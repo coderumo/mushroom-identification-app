@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tez_front/controller/map_controller.dart';
@@ -8,6 +9,7 @@ import 'package:tez_front/widgets/custom_button.dart';
 import '../constants/color_constant.dart';
 import '../controller/photo_controller.dart';
 import '../models/post_model.dart';
+import '../controller/db_manager.dart'; // Ensure you have this import
 
 class ResultMushroom extends StatefulWidget {
   final String title;
@@ -51,7 +53,10 @@ class _ResultMushroomState extends State<ResultMushroom> {
         () {
           if (photoController.image.value == null) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitFadingCircle(
+                color: ColorConstants.darkGreen,
+                size: 50.0,
+              ),
             );
           } else {
             return Column(
@@ -87,40 +92,44 @@ class _ResultMushroomState extends State<ResultMushroom> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CustomButton(
-                          buttonText: buttonText,
-                          onPressed: () async {
-                            await mapController.getCurrentLocation();
-                            if (mapController.selectedLocation.value != null) {
-                              setState(() {
-                                address = mapController.address.value;
-                                selectedLocation =
-                                    mapController.selectedLocation.value;
-                              });
-                              await savePost();
-                            } else {
-                              Get.snackbar('Hata', 'Konum alınamadı.');
-                            }
-                          },
-                        ),
-                        CustomButton(
-                          buttonText: buttonText2,
-                          onPressed: () async {
-                            await mapController.getCurrentLocation();
-                            if (mapController.selectedLocation.value != null) {
-                              setState(() {
-                                address = mapController.address.value;
-                                selectedLocation =
-                                    mapController.selectedLocation.value;
-                              });
-                              await savePost();
-                              Get.snackbar(
-                                  'Kaydedildi', 'Gönderi Başarıyla kaydedildi');
-                            } else {
-                              Get.snackbar('Hata', 'Konum alınamadı.');
-                            }
-                          },
-                        ),
+                        if (!Database.instance.isGuest())
+                          CustomButton(
+                            buttonText: buttonText,
+                            onPressed: () async {
+                              await mapController.getCurrentLocation();
+                              if (mapController.selectedLocation.value !=
+                                  null) {
+                                setState(() {
+                                  address = mapController.address.value;
+                                  selectedLocation =
+                                      mapController.selectedLocation.value;
+                                });
+                                await savePost();
+                              } else {
+                                Get.snackbar('Hata', 'Konum alınamadı.');
+                              }
+                            },
+                          ),
+                        if (!Database.instance.isGuest())
+                          CustomButton(
+                            buttonText: buttonText2,
+                            onPressed: () async {
+                              await mapController.getCurrentLocation();
+                              if (mapController.selectedLocation.value !=
+                                  null) {
+                                setState(() {
+                                  address = mapController.address.value;
+                                  selectedLocation =
+                                      mapController.selectedLocation.value;
+                                });
+                                await savePost();
+                                Get.snackbar('Kaydedildi',
+                                    'Gönderi Başarıyla kaydedildi');
+                              } else {
+                                Get.snackbar('Hata', 'Konum alınamadı.');
+                              }
+                            },
+                          ),
                         CustomButton(
                           buttonText: buttonText3,
                           onPressed: photoController.cancel,

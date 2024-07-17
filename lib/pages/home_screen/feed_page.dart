@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 import 'package:tez_front/models/post_model.dart';
 import 'package:tez_front/widgets/comment_widget.dart';
+
+import '../../constants/color_constant.dart';
 
 class FeedList extends StatefulWidget {
   const FeedList({Key? key}) : super(key: key);
@@ -56,7 +59,12 @@ class FeedListState extends State<FeedList> {
         title: const Text('Mantar Keşfet'),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: SpinKitFadingCircle(
+                color: ColorConstants.darkGreen,
+                size: 50.0,
+              ),
+            )
           : posts.isEmpty
               ? const Center(child: Text('No posts available'))
               : ListView.builder(

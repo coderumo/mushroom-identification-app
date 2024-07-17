@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/controller/map_controller.dart';
 
 class MapPage extends StatefulWidget {
@@ -57,38 +58,42 @@ class _MapPageState extends State<MapPage> {
             bottom: 30,
             left: 10,
             child: Obx(() {
-              return Column(
-                children: [
-                  Container(
-                    color: Colors.white,
-                    child: Text(
-                      'Adres: ${mapController.address.value}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+              if (Database.instance.isGuest()) {
+                return const SizedBox.shrink();
+              } else {
+                return Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: Text(
+                        'Adres: ${mapController.address.value}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      List<String> addressParts =
-                          mapController.address.value.split(', ');
-                      String city =
-                          addressParts.length > 1 ? addressParts[1] : '';
-                      String district = addressParts[0];
+                    ElevatedButton(
+                      onPressed: () {
+                        List<String> addressParts =
+                            mapController.address.value.split(', ');
+                        String city =
+                            addressParts.length > 1 ? addressParts[1] : '';
+                        String district = addressParts[0];
 
-                      Get.back(result: {
-                        'city': city,
-                        'district': district,
-                        'latitude':
-                            mapController.selectedLocation.value?.latitude ??
-                                0.0,
-                        'longitude':
-                            mapController.selectedLocation.value?.longitude ??
-                                0.0,
-                      });
-                    },
-                    child: const Text('Konumu Onayla'),
-                  ),
-                ],
-              );
+                        Get.back(result: {
+                          'city': city,
+                          'district': district,
+                          'latitude':
+                              mapController.selectedLocation.value?.latitude ??
+                                  0.0,
+                          'longitude':
+                              mapController.selectedLocation.value?.longitude ??
+                                  0.0,
+                        });
+                      },
+                      child: const Text('Konumu Onayla'),
+                    ),
+                  ],
+                );
+              }
             }),
           ),
         ],
