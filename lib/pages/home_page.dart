@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        appBar: const CustomAppBar(),
+        appBar: CustomAppBar(),
         body: Obx(
           () {
             switch (controller.tabIndex.value) {
@@ -33,28 +33,33 @@ class HomePage extends StatelessWidget {
             }
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          elevation: 3,
-          backgroundColor: ColorConstants.darkGreen,
-          onPressed: () async {
-            if (Database.instance.isGuest()) {
-              print(Database.instance.isGuest());
-              Get.snackbar(
-                'Erişim Engellendi',
-                'Giriş yapmanız gerekmektedir',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: Colors.red,
-                colorText: Colors.white,
-              );
-            } else {
-              Get.to(const SharePage());
+        floatingActionButton: Obx(
+          () {
+            if (controller.tabIndex.value == 1) {
+              return const SizedBox.shrink();
             }
+            return FloatingActionButton(
+              elevation: 3,
+              backgroundColor: ColorConstants.darkGreen,
+              onPressed: () async {
+                if (Database.instance.isGuest()) {
+                  print(Database.instance.isGuest());
+                  Get.snackbar(
+                    'Erişim Engellendi',
+                    'Giriş yapmanız gerekmektedir',
+                    snackPosition: SnackPosition.TOP,
+                  );
+                } else {
+                  Get.to(const SharePage());
+                }
+              },
+              child: const Icon(
+                Icons.add,
+                size: 40,
+                color: Colors.white,
+              ),
+            );
           },
-          child: const Icon(
-            Icons.add,
-            size: 40,
-            color: Colors.white,
-          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         bottomNavigationBar: const AnimatedBar(),
@@ -64,18 +69,14 @@ class HomePage extends StatelessWidget {
 
   Widget deneme() {
     if (Database.instance.isGuest()) {
-      Get.snackbar(
-        'Erişim Engellendi',
-        'Giriş yapmanız gerekmektedir',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Giriş yapmanız gerekmektedir."),
+            const Text(
+              "Bu sayfayı kullanabilmek için giriş yapmanız gerekmektedir.",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(
               height: 50,
             ),

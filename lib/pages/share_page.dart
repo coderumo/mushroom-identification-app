@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:tez_front/controller/post_controller.dart';
 import 'package:tez_front/models/post_model.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
 import 'package:tez_front/services/auth_service.dart';
@@ -43,14 +42,14 @@ class SharePageState extends State<SharePage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Share Post'),
+        title: const Text('Mantar Paylaş'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             _image == null
-                ? const Text('No image selected.')
+                ? const Text('Fotoğraf seçilmedi.')
                 : SizedBox(
                     height: 400,
                     child: Image.file(

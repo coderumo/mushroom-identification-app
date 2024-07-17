@@ -62,8 +62,6 @@ class HomeController extends GetxController {
         'Erişim Engellendi',
         'Giriş yapmanız gerekmektedir',
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
       );
     } else {
       Get.to(pages[index], transition: Transition.leftToRight);

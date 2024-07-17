@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tez_front/controller/map_controller.dart';
 import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/widgets/custom_button.dart';
-
 import '../constants/color_constant.dart';
 import '../controller/photo_controller.dart';
 import '../models/post_model.dart';
@@ -16,6 +14,7 @@ class ResultMushroom extends StatefulWidget {
   final String subTitle;
   final String bodyText;
   final File image;
+
   const ResultMushroom({
     Key? key,
     required this.title,
@@ -115,6 +114,8 @@ class _ResultMushroomState extends State<ResultMushroom> {
                                     mapController.selectedLocation.value;
                               });
                               await savePost();
+                              Get.snackbar(
+                                  'Kaydedildi', 'Gönderi Başarıyla kaydedildi');
                             } else {
                               Get.snackbar('Hata', 'Konum alınamadı.');
                             }
@@ -138,7 +139,14 @@ class _ResultMushroomState extends State<ResultMushroom> {
                       ),
                       _SubTitleWidget(subTitle: widget.subTitle),
                       _TextWidget(bodyText: widget.bodyText),
-                      if (address.isNotEmpty) Text('Adres: $address'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (address.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Adres: $address'),
+                        ),
                     ],
                   ),
                 )

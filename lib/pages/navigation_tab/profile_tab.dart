@@ -7,8 +7,6 @@ import 'package:tez_front/constants/color_constant.dart';
 import 'package:tez_front/constants/padding_constant.dart';
 import 'package:tez_front/constants/sized_box_constant.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
-import 'package:tez_front/models/classify_model.dart';
-import 'package:tez_front/models/post_api_response.dart';
 import 'package:tez_front/models/post_model.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -19,7 +17,6 @@ class ProfileTab extends StatelessWidget {
     UserTabController controller = Get.put(UserTabController());
 
     return Obx(() {
-      // Kullanıcı bilgilerini dinamik olarak yükle
       final user = controller.user.value;
       final String name = user?.name ?? 'Kullanıcı Adı';
       final String url =
@@ -31,25 +28,9 @@ class ProfileTab extends StatelessWidget {
           children: [
             Stack(
               children: [
-                InkWell(
-                  onTap: () async {
-                    final XFile? image = await controller.pickImage();
-                    if (image == null) {
-                      return;
-                    }
-                    final res = await controller.authService
-                        .setProfileImage(File(image.path));
-                    if (res.success) {
-                      Get.snackbar('Başarılı', 'Profil resmi güncellendi');
-                    } else {
-                      Get.snackbar(res.message, res.message);
-                    }
-                    await controller.fetchUserProfile();
-                  },
-                  child: CircleAvatar(
-                    radius: radius,
-                    backgroundImage: NetworkImage(url),
-                  ),
+                CircleAvatar(
+                  radius: radius,
+                  backgroundImage: NetworkImage(url),
                 ),
                 Positioned(
                   right: 0,
@@ -204,10 +185,6 @@ class _MushroomCard extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text(
-                    _model.trueLabels,
-                    style: const TextStyle(color: Colors.black),
-                  ),
                   Expanded(
                     child: Image.network(
                       _model.image,
@@ -217,15 +194,11 @@ class _MushroomCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(_model.time(_model.createdAt)),
+                      // Text(_model.time(_model.createdAt)),
                       Text(_model.place ?? ''),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Text(_model.canEat ? "Yenilebilir" : "Yenilemez"),
-                    ],
-                  ),
+                  const Row(),
                 ],
               ),
               Positioned(
@@ -277,7 +250,6 @@ class _PostWidgetState extends State<PostWidget> {
         });
       }
     } catch (e) {
-      // Hata durumunda ne yapılacaksa burada belirleyin
       print('Hata: $e');
     } finally {
       setState(() {
@@ -328,10 +300,24 @@ void onTap(BuildContext context, int index, List<PostModel> items) {
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-        child: SizedBox(
-          width: SizedBoxConstant.width,
-          height: SizedBoxConstant.heigth,
-          child: Image.network(items[index].image, fit: BoxFit.contain),
+        child: Stack(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.network(items[index].image, fit: BoxFit.contain),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
         ),
       );
     },

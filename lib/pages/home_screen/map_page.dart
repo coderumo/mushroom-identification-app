@@ -4,7 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tez_front/controller/map_controller.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({
+    super.key,
+  });
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -48,8 +50,6 @@ class _MapPageState extends State<MapPage> {
               onTap: (LatLng latLng) async {
                 mapController.selectedLocation.value = latLng;
                 await mapController.getAddressFromLatLng(latLng);
-                print(
-                    '${mapController.address.value} ${mapController.selectedLocation.value}');
               },
             );
           }),
@@ -68,10 +68,8 @@ class _MapPageState extends State<MapPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      print(
-                          '${mapController.address.value} ${mapController.selectedLocation.value}');
                       List<String> addressParts =
-                          mapController.address.value.split('');
+                          mapController.address.value.split(', ');
                       String city =
                           addressParts.length > 1 ? addressParts[1] : '';
                       String district = addressParts[0];

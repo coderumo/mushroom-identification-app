@@ -122,7 +122,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-
+      print('Raw response data: $data');
       return GeneralResponse.fromJson(data);
     } else {
       throw Exception('Failed to load user profile');

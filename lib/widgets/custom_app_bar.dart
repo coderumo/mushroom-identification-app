@@ -5,16 +5,16 @@ import '../controller/db_manager.dart';
 import '../pages/notification_dialog.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({
+  CustomAppBar({
     super.key,
   });
+  String projectLogo = 'assets/images/logo-g.png';
+  String noNotification = 'assets/images/no-spam.png';
 
   @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double deviceHeight = mediaQueryData.size.height;
-    const String projectLogo = 'assets/images/logo-g.png';
-    const String noNotification = 'assets/images/no-spam.png';
 
     double logoSize = deviceHeight / 24;
 
