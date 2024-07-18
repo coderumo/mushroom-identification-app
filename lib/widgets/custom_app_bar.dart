@@ -18,17 +18,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     double logoSize = deviceHeight / 24;
 
-    final List<String> notifications = []; // Bildirim metinleri burada.
+    final List<String> notifications = [];
     const String notificationMessage = 'Bildirim yok';
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: AppBar(
         automaticallyImplyLeading: false,
-        title: Expanded(
-            child: Image.asset(
+        title: Image.asset(
           projectLogo,
           height: logoSize,
-        )),
+        ),
         actions: [
           _AppBarIconButton(
             icon: const Icon(Icons.notifications),
@@ -56,11 +55,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  void _showNotificationDialog(
-      BuildContext context,
-      List<String>? notifications,
-      String noNotification,
-      String notificationMessage) {
+  void _showNotificationDialog(BuildContext context, List<String>? notifications, String noNotification, String notificationMessage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

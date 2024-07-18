@@ -98,12 +98,13 @@ class FeedCard extends StatefulWidget {
 
 class _FeedCardState extends State<FeedCard> {
   bool _isLiked = false;
-
+  int likeCount = 0;
   @override
   void initState() {
     super.initState();
     final user = Database().getUser();
     _isLiked = widget.post.likes.any((like) => like.userId == user?.id);
+    likeCount = widget.post.likes.length;
   }
 
   @override
@@ -157,17 +158,23 @@ class _FeedCardState extends State<FeedCard> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
-                        color: _isLiked ? Colors.red : null,
-                      ),
-                      onPressed: () {
-                        _toggleLike();
-                        setState(() {
-                          _isLiked = !_isLiked;
-                        });
-                      },
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
+                            color: _isLiked ? Colors.blue : null,
+                          ),
+                          onPressed: () {
+                            _toggleLike();
+                            setState(() {
+                              _isLiked = !_isLiked;
+                              likeCount += _isLiked ? 1 : -1;
+                            });
+                          },
+                        ),
+                        Text('$likeCount Beğeni'),
+                      ],
                     ),
                     IconButton(
                       icon: const Icon(Icons.comment),
