@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/models/post_model.dart';
+import '../models/liked_model.dart';
 import '../models/user_model.dart';
 import '../models/general_response.dart';
 
@@ -16,6 +17,8 @@ class AuthService {
   final String urlSetProfileImage = 'user/profile-image';
   final String urlPosts = 'post';
   final String urlDrafts = 'draft';
+  final String urlMyDraft = 'draft/myDraft';
+  final String urlLike = 'like';
 
   Future<GeneralResponse> register(
       String name, String userName, String email, String password) async {
@@ -158,6 +161,21 @@ class AuthService {
     }
   }
 
+  Future<GeneralResponse> getMyDraft() async {
+    final url = Uri.parse('$baseUrl$urlMyDraft');
+    final token = Database().tokenBox.get('token');
+    final response =
+        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      return GeneralResponse.fromJson(data);
+    } else {
+      throw Exception('Failed to load user profile');
+    }
+  }
+
   Future<GeneralResponse> createPost(PostRequestModel model, File image) async {
     final url = Uri.parse('$baseUrl$urlPosts');
     final token = Database().tokenBox.get('token');
@@ -252,6 +270,45 @@ class AuthService {
       }
     } catch (e) {
       throw Exception('Failed to delete post: $e');
+    }
+  }
+
+  Future<LikedModel> likePost(String postId) async {
+    final url = Uri.parse('http://93.190.8.108:3000/like');
+    final token = Database().tokenBox.get('token');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'postId': postId, 'isLiked': true}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final res = LikedModel.fromJson(json.decode(response.body));
+      return res;
+    } else {
+      final errorResponse = json.decode(response.body);
+      final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
+      throw Exception('Failed to like post: $errorMessage');
+    }
+  }
+
+  Future<GeneralResponse> getLikes(String postId) async {
+    final url = Uri.parse('$baseUrl$urlLike/$postId');
+    final token = Database().tokenBox.get('token');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return GeneralResponse.fromJson(data);
+    } else {
+      throw Exception('Failed to get likes');
     }
   }
 }

@@ -27,23 +27,24 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      throw const FormatException("Null JSON provided to PostModel");
+    }
+
     return PostModel(
-      id: json?['id'] ?? '',
-      description: json?['description'] ?? '',
-      image: json?['image'] ?? '',
-      place: json?['place'],
-      latitude: json?['latitude'],
-      longtitude: json?['longtitude'],
-      userId: json?['userId'] ?? '',
-      createdAt: DateTime.parse(json?['createdAt'] ?? ''),
-      updatedAt: json?['updatedAt'] != null
-          ? DateTime.parse(json?['updatedAt'])
-          : null,
-      deletedAt: json?['deletedAt'] != null
-          ? DateTime.parse(json?['deletedAt'])
-          : null,
-      user:
-          json?['user'] != null ? PostUserModel.fromJson(json?['user']) : null,
+      id: json['id'] ?? '',
+      description: json['description'],
+      image: json['image'] ?? '',
+      place: json['place'],
+      latitude: json['latitude']?.toString(),
+      longtitude: json['longtitude']?.toString(),
+      userId: json['userId'] ?? '',
+      createdAt: DateTime.parse(json['createdAt'] ?? ''),
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      deletedAt:
+          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      user: json['user'] != null ? PostUserModel.fromJson(json['user']) : null,
     );
   }
 
@@ -52,14 +53,14 @@ class PostModel {
         'description': description,
         'image': image,
         'place': place,
-        'latitude': latitude,
-        'longtitude': longtitude,
+        'latitude': latitude.toString(),
+        'longtitude': longtitude.toString(),
         'userId': userId,
         'createdAt': createdAt.toIso8601String(),
         'updatedAt': updatedAt?.toIso8601String(),
         'deletedAt': deletedAt?.toIso8601String(),
+        'user': user?.toJson(),
       };
-
   String time(DateTime? time) {
     if (time == null) return '';
     return "${time.day}/${time.month}/${time.year} ${time.hour}:${time.minute}";

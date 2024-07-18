@@ -107,21 +107,32 @@ class SavedPostWidget extends StatefulWidget {
 
 class _SavedPostWidgetState extends State<SavedPostWidget> {
   List<PostModel> _items = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getDraft();
+    getMydrafts();
   }
 
-  void getDraft() async {
-    final res = await UserTabController().authService.getDraft();
-    if (res.success) {
-      final data = res.data['data'] as List;
-
-      final items = data.map((e) => PostModel.fromJson(e)).toList();
+  void getMydrafts() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final res = await UserTabController().authService.getMyDraft();
+      if (res.success) {
+        final data = res.data as List;
+        final items = data.map((e) => PostModel.fromJson(e)).toList();
+        setState(() {
+          _items = items;
+        });
+      }
+    } catch (e) {
+      print('Hata: $e');
+    } finally {
       setState(() {
-        _items = items;
+        isLoading = false;
       });
     }
   }
@@ -195,7 +206,6 @@ class _MushroomCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Text(_model.time(_model.createdAt)),
                       Text(_model.place ?? ''),
                     ],
                   ),
