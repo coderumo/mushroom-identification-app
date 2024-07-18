@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:tez_front/controller/comment_controller.dart';
+import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 import 'package:tez_front/models/post_model.dart';
+import 'package:tez_front/models/user_model.dart';
 import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/widgets/comment_widget.dart';
 
@@ -85,8 +88,9 @@ class FeedListState extends State<FeedList> {
 
 class FeedCard extends StatefulWidget {
   final PostModel post;
+  final Size? size;
 
-  const FeedCard({Key? key, required this.post}) : super(key: key);
+  const FeedCard({Key? key, required this.post, this.size}) : super(key: key);
 
   @override
   _FeedCardState createState() => _FeedCardState();
@@ -98,67 +102,89 @@ class _FeedCardState extends State<FeedCard> {
   @override
   void initState() {
     super.initState();
-    _isLiked = widget.post.likes.any((like) => like.userId == 'currentUserId');
+    final user = Database().getUser();
+    _isLiked = widget.post.likes.any((like) => like.userId == user?.id);
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Card(
       elevation: 5,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Image.network(
-            widget.post.image,
-            width: double.infinity,
-            fit: BoxFit.contain,
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage: widget.post.user?.profileImage != null ? NetworkImage(widget.post.user!.profileImage!) : null,
+              radius: 20,
+              child: widget.post.user?.profileImage == null ? const Icon(Icons.person) : null,
+            ),
+            title: Text(widget.post.user?.userName ?? ''),
+            subtitle: Text(widget.post.createdAt.forCommentDateString()),
+          ),
+          SizedBox(
+            height: widget.size?.height ?? size.height * 0.5,
+            child: Image.network(
+              widget.post.image,
+              width: double.infinity,
+              fit: BoxFit.contain,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(widget.post.description ?? ''),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                _showCommentsSheet(context);
-              },
-              child: Text(
-                'Yorumları Göster..',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColorDark,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
-                    color: _isLiked ? Colors.red : null,
-                  ),
-                  onPressed: () {
-                    _toggleLike();
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.comment),
-                  onPressed: () {
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
                     _showCommentsSheet(context);
                   },
+                  child: Text(
+                    'Yorumları Göster..',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {
-                    // Paylaşma işlemleri burada yapılabilir
-                  },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
+                        color: _isLiked ? Colors.red : null,
+                      ),
+                      onPressed: () {
+                        _toggleLike();
+                        setState(() {
+                          _isLiked = !_isLiked;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.comment),
+                      onPressed: () {
+                        _showCommentsSheet(context);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.share),
+                      onPressed: () {
+                        // Paylaşma işlemleri burada yapılabilir
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -178,8 +204,7 @@ class _FeedCardState extends State<FeedCard> {
 
   void _toggleLike() async {
     try {
-      LikedModel liked =
-          await AuthService().likePost(widget.post.id, !_isLiked);
+      LikedModel liked = await AuthService().likePost(widget.post.id, !_isLiked);
 
       print('Liked model: $liked'); // Kontrol için konsola yazdırma
 

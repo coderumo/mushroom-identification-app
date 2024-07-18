@@ -1,4 +1,4 @@
-package com.example.tez_front
+package com.tez_front
 
 import io.flutter.embedding.android.FlutterActivity
 

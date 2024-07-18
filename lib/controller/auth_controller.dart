@@ -26,6 +26,7 @@ class AuthController extends GetxController {
         final userModel = UserModel.fromJson(user);
         Database().login(token, userModel);
         print("token: ${Database().tokenBox.get('token')}");
+        await _authService.updateToken();
         Get.snackbar('Başarılı', 'Başarıyla giriş yapıldı');
         Get.offAll(const HomePage());
       } else {

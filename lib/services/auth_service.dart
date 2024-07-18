@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tez_front/controller/db_manager.dart';
 import 'package:tez_front/models/post_model.dart';
+import 'package:tez_front/utils/firebase_manager.dart';
 import '../models/liked_model.dart';
 import '../models/user_model.dart';
 import '../models/general_response.dart';
@@ -20,8 +21,7 @@ class AuthService {
   final String urlMyDraft = 'draft/myDraft';
   final String urlLike = 'like';
 
-  Future<GeneralResponse> register(
-      String name, String userName, String email, String password) async {
+  Future<GeneralResponse> register(String name, String userName, String email, String password) async {
     final url = Uri.parse('$baseUrl$urlRegister');
 
     final registerData = UserModel(
@@ -45,8 +45,7 @@ class AuthService {
     } else {
       final errorResponse = json.decode(response.body);
       final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
-      throw Exception(
-          'Kayıt başarısız: ${errorMessage.toString().split("Exception:").last}');
+      throw Exception('Kayıt başarısız: ${errorMessage.toString().split("Exception:").last}');
     }
   }
 
@@ -58,16 +57,73 @@ class AuthService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode({'email': email, 'password': password}),
+        body: jsonEncode({
+          'email': email,
+          'password': password
+        }),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final authResponse =
-            GeneralResponse.fromJson(json.decode(response.body));
+        final authResponse = GeneralResponse.fromJson(json.decode(response.body));
         return authResponse;
       } else {
         final errorResponse = json.decode(response.body);
-        final errorMessage =
-            errorResponse['message'] ?? 'Unknown error occurred';
+        final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
+        throw Exception('Giriş başarısız: $errorMessage');
+      }
+    } catch (e) {
+      throw Exception('Giriş başarısız: $e');
+    }
+  }
+
+  Future<GeneralResponse> comment(String desc, String postId) async {
+    final token = Database().tokenBox.get('token');
+    final url = Uri.parse('${baseUrl}comment');
+
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'description': desc,
+        'postId': postId
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final authResponse = GeneralResponse.fromJson(json.decode(response.body));
+      return authResponse;
+    } else {
+      final errorResponse = json.decode(response.body);
+      final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
+      throw Exception('Yorum başarısız: $errorMessage');
+    }
+  }
+
+  Future<GeneralResponse> updateToken() async {
+    try {
+      final token = Database().tokenBox.get('token');
+      final url = Uri.parse('${baseUrl}user');
+      final response = await http.put(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'fsmToken': NotificationsManager().token
+        }),
+      );
+
+      print('Token update response: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final authResponse = GeneralResponse.fromJson(json.decode(response.body));
+        return authResponse;
+      } else {
+        final errorResponse = json.decode(response.body);
+        final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
         throw Exception('Giriş başarısız: $errorMessage');
       }
     } catch (e) {
@@ -106,8 +162,7 @@ class AuthService {
     final responseString = await response.stream.bytesToString();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final authResponse =
-          GeneralResponse.fromJson(json.decode(responseString));
+      final authResponse = GeneralResponse.fromJson(json.decode(responseString));
       return authResponse;
     } else {
       final errorResponse = json.decode(responseString);
@@ -116,27 +171,42 @@ class AuthService {
     }
   }
 
-  Future<GeneralResponse> getPost({bool getUsers = false}) async {
-    final url = Uri.parse(
-        '$baseUrl$urlPosts${getUsers ? '?relations=user,likes' : ''}');
+  Future<GeneralResponse> getPost({bool getUsers = true}) async {
+    final url = Uri.parse('$baseUrl$urlPosts${getUsers ? '?relations=user,likes,comments' : ''}');
     final token = Database().tokenBox.get('token');
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print('Raw response data: $data');
       return GeneralResponse.fromJson(data);
     } else {
       throw Exception('Failed to load user profile');
     }
   }
 
+  Future<GeneralResponse> getPostComments(String postId) async {
+    final url = Uri.parse('${baseUrl}comment?relations=user&filter.postId=$postId');
+    final token = Database().tokenBox.get('token');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token'
+    });
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return GeneralResponse.fromJson(data);
+    } else {
+      throw Exception('Failed to load user posts');
+    }
+  }
+
   Future<GeneralResponse> getMyPost() async {
     final url = Uri.parse('$baseUrl$urlPosts/myPost');
     final token = Database().tokenBox.get('token');
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -149,8 +219,9 @@ class AuthService {
   Future<GeneralResponse> getDraft() async {
     final url = Uri.parse('$baseUrl$urlDrafts');
     final token = Database().tokenBox.get('token');
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -164,8 +235,9 @@ class AuthService {
   Future<GeneralResponse> getMyDraft() async {
     final url = Uri.parse('$baseUrl$urlMyDraft');
     final token = Database().tokenBox.get('token');
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -185,15 +257,14 @@ class AuthService {
       ..fields['specie'] = model.specie
       ..fields['place'] = model.place
       ..fields['latitude'] = model.latitude.toString()
-      ..fields['longitude'] = model.longitude.toString()
+      ..fields['longtitude'] = model.longitude.toString()
       ..files.add(await http.MultipartFile.fromPath('file', image.path));
 
     final response = await request.send();
     final responseString = await response.stream.bytesToString();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final authResponse =
-          GeneralResponse.fromJson(json.decode(responseString));
+      final authResponse = GeneralResponse.fromJson(json.decode(responseString));
       return authResponse;
     } else {
       final errorResponse = json.decode(responseString);
@@ -202,32 +273,26 @@ class AuthService {
     }
   }
 
-  Future<GeneralResponse> createDraft(
-      PostRequestModel model, File image) async {
+  Future<GeneralResponse> createDraft(PostRequestModel model, File image) async {
     final url = Uri.parse('$baseUrl$urlDrafts'); // Taslak kaydetme endpointi
     final token = Database().tokenBox.get('token'); // Yetkilendirme token'ı
 
     // HTTP POST isteği hazırlama
     final request = http.MultipartRequest('POST', url)
-      ..headers['Authorization'] =
-          'Bearer $token' // Yetkilendirme token'ı ekleniyor
+      ..headers['Authorization'] = 'Bearer $token' // Yetkilendirme token'ı ekleniyor
       ..fields['description'] = model.description // Gönderinin açıklaması
       ..fields['specie'] = model.specie // Gönderinin türü
       ..fields['place'] = model.place // Gönderinin yeri
-      ..fields['latitude'] =
-          model.latitude.toString() // Gönderinin enlem bilgisi
-      ..fields['longitude'] =
-          model.longitude.toString() // Gönderinin boylam bilgisi
-      ..files.add(await http.MultipartFile.fromPath(
-          'file', image.path)); // Gönderinin dosyası
+      ..fields['latitude'] = model.latitude.toString() // Gönderinin enlem bilgisi
+      ..fields['longitude'] = model.longitude.toString() // Gönderinin boylam bilgisi
+      ..files.add(await http.MultipartFile.fromPath('file', image.path)); // Gönderinin dosyası
 
     // İsteği gerçekleştirme ve cevabı alma
     final response = await request.send();
     final responseString = await response.stream.bytesToString();
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final authResponse =
-          GeneralResponse.fromJson(json.decode(responseString));
+      final authResponse = GeneralResponse.fromJson(json.decode(responseString));
       return authResponse;
     } else {
       final errorResponse = json.decode(responseString);
@@ -238,8 +303,7 @@ class AuthService {
 
   Future<Map<dynamic, dynamic>> classifyImage(File image) async {
     final url = Uri.parse(secondaryUrl);
-    final request = http.MultipartRequest('POST', url)
-      ..files.add(await http.MultipartFile.fromPath('photo', image.path));
+    final request = http.MultipartRequest('POST', url)..files.add(await http.MultipartFile.fromPath('photo', image.path));
 
     final response = await request.send();
     final responseString = await response.stream.bytesToString();
@@ -260,7 +324,9 @@ class AuthService {
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl$urlPosts/$postId'),
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {
+          'Authorization': 'Bearer $token'
+        },
       );
 
       if (response.statusCode == 200) {
@@ -284,7 +350,9 @@ class AuthService {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'postId': postId, 'isLiked': isLiked}),
+        body: jsonEncode({
+          'postId': postId
+        }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -292,8 +360,7 @@ class AuthService {
         return res;
       } else {
         final errorResponse = json.decode(response.body);
-        final errorMessage =
-            errorResponse['message'] ?? 'Unknown error occurred';
+        final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
         throw Exception('Failed to like post: $errorMessage');
       }
     } catch (e) {

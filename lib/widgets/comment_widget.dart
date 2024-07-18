@@ -3,19 +3,29 @@ import 'package:get/get.dart';
 
 import '../controller/comment_controller.dart';
 
-class CommentSheet extends StatelessWidget {
+class CommentSheet extends StatefulWidget {
   final String postId;
   final List<String> comments;
+
+  const CommentSheet({Key? key, required this.postId, required this.comments}) : super(key: key);
+
+  @override
+  State<CommentSheet> createState() => _CommentSheetState();
+}
+
+class _CommentSheetState extends State<CommentSheet> {
   final CommentController commentController = Get.put(CommentController());
 
-  CommentSheet({Key? key, required this.postId, required this.comments})
-      : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    commentController.getPostComments(widget.postId);
+  }
 
   @override
   Widget build(BuildContext context) {
     const hintText = 'Add a comment...';
 
-    commentController.comments.assignAll(comments); // Yorumları yükle
     TextEditingController commentControllerText = TextEditingController();
 
     return GestureDetector(
@@ -56,11 +66,15 @@ class CommentSheet extends StatelessWidget {
                             controller: scrollController,
                             itemCount: commentController.comments.length,
                             itemBuilder: (context, index) {
+                              final image = commentController.comments[index].userImage;
                               return ListTile(
-                                title: Text('User $index'),
-                                subtitle:
-                                    Text(commentController.comments[index]),
-                              );
+                                  leading: CircleAvatar(
+                                    backgroundImage: image != null ? NetworkImage(commentController.comments[index].userImage!) : null,
+                                    child: image == null ? const Icon(Icons.person, color: Colors.white) : null,
+                                  ),
+                                  title: Text(commentController.comments[index].username, style: Theme.of(context).textTheme.titleMedium),
+                                  subtitle: Text(commentController.comments[index].description),
+                                  trailing: Text(commentController.comments[index].date.forCommentDateString()));
                             },
                           );
                         },
@@ -84,8 +98,7 @@ class CommentSheet extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.send),
                             onPressed: () {
-                              commentController
-                                  .addComment(commentControllerText.text);
+                              commentController.addComment(commentControllerText.text, widget.postId);
                               commentControllerText.clear();
                             },
                           ),

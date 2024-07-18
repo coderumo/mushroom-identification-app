@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tez_front">
+    package="com.tez_front">
 
     <!-- Kamera izni -->
     <uses-permission android:name="android.permission.CAMERA"/>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "557507789195",
+    "project_id": "mush-app-0",
+    "storage_bucket": "mush-app-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557507789195:android:2d7e35e7358bfd814c6f8e",
+        "android_client_info": {
+          "package_name": "com.tez_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVFxY41bv4aVxg7qb6C1ix2ydCu34MKGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

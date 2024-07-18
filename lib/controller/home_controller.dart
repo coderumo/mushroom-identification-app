@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tez_front/pages/home_screen/map_page.dart';
 import 'package:tez_front/controller/photo_controller.dart';
 import 'package:tez_front/pages/home_screen/feed_page.dart';
+import 'package:tez_front/pages/home_screen/posts_map.dart';
 import 'package:tez_front/pages/result_mushroom.dart';
 import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/controller/db_manager.dart';
@@ -13,7 +14,7 @@ class HomeController extends GetxController {
 
   final List<Widget> pages = [
     const Placeholder(), //öylesine
-    const MapPage(),
+    const PostMap(),
     const Placeholder(),
     const FeedList()
   ];

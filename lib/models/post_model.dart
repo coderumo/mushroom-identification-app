@@ -43,15 +43,10 @@ class PostModel {
       longtitude: json['longtitude']?.toString(),
       userId: json['userId'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? ''),
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      deletedAt:
-          json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
       user: json['user'] != null ? PostUserModel.fromJson(json['user']) : null,
-      likes: (json['likes'] as List<dynamic>?)
-              ?.map((item) => LikedModel.fromJson(item as Map<String, dynamic>))
-              .toList() ??
-          [],
+      likes: (json['likes'] as List<dynamic>?)?.map((item) => LikedModel.fromJson(item as Map<String, dynamic>)).toList() ?? [],
     );
   }
 
@@ -101,7 +96,7 @@ class PostRequestModel {
 
   @override
   String toString() {
-    return 'PostRequestModel(description: $description, specie: $specie, place: $place, latitude: $latitude, longitude: $longitude)';
+    return 'PostRequestModel(description: $description, specie: $specie, place: $place, latitude: $latitude, longtitude: $longitude)';
   }
 }
 
@@ -110,7 +105,7 @@ class PostUserModel {
   final String name;
   final String? userName;
   final String email;
-  final String profileImage;
+  final String? profileImage;
 
   PostUserModel({
     required this.id,
@@ -129,7 +124,7 @@ class PostUserModel {
       name: json['name'] ?? '',
       userName: json['userName'],
       email: json['email'] ?? '',
-      profileImage: json['profileImage'] ?? '',
+      profileImage: json['profileImage'],
     );
   }
 

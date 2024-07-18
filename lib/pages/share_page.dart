@@ -27,8 +27,7 @@ class SharePageState extends State<SharePage> {
   bool isLoading = false;
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -82,8 +81,7 @@ class SharePageState extends State<SharePage> {
                       print(location);
                       if (location != null) {
                         setState(() {
-                          konum =
-                              "${location['city'] ?? ''}${location['city'] != null ? ',' : ''}${location['district'] ?? ''}";
+                          konum = "${location['city'] ?? ''}${location['city'] != null ? ',' : ''}${location['district'] ?? ''}";
                           latitude = location['latitude'];
                           longitude = location['longitude'];
                         });
@@ -101,18 +99,18 @@ class SharePageState extends State<SharePage> {
                         longitude: longitude.toString(),
                       );
 
+
+                      print(requestModel);
+
                       try {
                         setState(() {
                           isLoading = true;
                         });
                         AuthService authService = AuthService();
-                        final res =
-                            await authService.createPost(requestModel, _image!);
+                        final res = await authService.createPost(requestModel, _image!);
                         if (res.success) {
-                          Get.snackbar(
-                              'Başarılı', 'Gönderi başarıyla paylaşıldı');
-                          Get.offAll(
-                              () => const HomePage()); // Navigate to HomePage
+                          Get.snackbar('Başarılı', 'Gönderi başarıyla paylaşıldı');
+                          Get.offAll(() => const HomePage()); // Navigate to HomePage
                         } else {
                           Get.snackbar('Hata', res.message);
                         }
