@@ -250,37 +250,6 @@ class _FeedCardState extends State<FeedCard> {
                 ),
               ),
             ),
-            TextButton(
-                onPressed: () {
-                  Get.bottomSheet(
-                    Material(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                      ),
-                      child: SizedBox(
-                        height: size.height * 0.3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Row(
-                                children: [
-                                  Text(widget.post.description ?? '', style: Theme.of(context).textTheme.bodyLarge),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                          ],
-                        ),
-                      ),
-                    ),
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                  );
-                },
-                child: const Text("Açıklama")),
           ],
         ),
       ),
