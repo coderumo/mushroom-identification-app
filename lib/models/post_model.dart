@@ -1,4 +1,5 @@
-/* {id: 459c9b8e-548f-41b2-8e15-d1f748b5d62d, description: karahan deniz görmüş , image: https://storage.googleapis.com/mush-app/mush-images/b8d5af54-21e4-4f4c-8bb0-767d452ea78f.jpg, place: , Atakum, latitude: 41.37, longtitude: null, userId: d214d84d-2635-41c9-8859-9bc24cad3e69, createdAt: 2024-07-01T12:21:32.879Z, updatedAt: 2024-07-01T12:21:32.879Z, deletedAt: null}*/
+import 'package:tez_front/models/liked_model.dart';
+
 class PostModel {
   final String id;
   final String? description;
@@ -11,6 +12,7 @@ class PostModel {
   final DateTime? updatedAt;
   final DateTime? deletedAt;
   final PostUserModel? user;
+  final List<LikedModel> likes;
 
   PostModel({
     required this.id,
@@ -24,6 +26,7 @@ class PostModel {
     required this.updatedAt,
     required this.deletedAt,
     required this.user,
+    required this.likes,
   });
 
   factory PostModel.fromJson(Map<String, dynamic>? json) {
@@ -45,6 +48,10 @@ class PostModel {
       deletedAt:
           json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
       user: json['user'] != null ? PostUserModel.fromJson(json['user']) : null,
+      likes: (json['likes'] as List<dynamic>?)
+              ?.map((item) => LikedModel.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -60,7 +67,9 @@ class PostModel {
         'updatedAt': updatedAt?.toIso8601String(),
         'deletedAt': deletedAt?.toIso8601String(),
         'user': user?.toJson(),
+        'likes': likes.map((like) => like.toJson()).toList(),
       };
+
   String time(DateTime? time) {
     if (time == null) return '';
     return "${time.day}/${time.month}/${time.year} ${time.hour}:${time.minute}";

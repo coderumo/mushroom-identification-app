@@ -3,9 +3,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:tez_front/controller/user_tab_controller.dart';
 import 'package:tez_front/models/post_model.dart';
+import 'package:tez_front/services/auth_service.dart';
 import 'package:tez_front/widgets/comment_widget.dart';
 
 import '../../constants/color_constant.dart';
+import '../../models/liked_model.dart';
 
 class FeedList extends StatefulWidget {
   const FeedList({Key? key}) : super(key: key);
@@ -66,7 +68,11 @@ class FeedListState extends State<FeedList> {
               ),
             )
           : posts.isEmpty
-              ? const Center(child: Text('No posts available'))
+              ? Center(
+                  child: Text(
+                  'Gönderi yok',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ))
               : ListView.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
@@ -77,10 +83,23 @@ class FeedListState extends State<FeedList> {
   }
 }
 
-class FeedCard extends StatelessWidget {
+class FeedCard extends StatefulWidget {
   final PostModel post;
 
   const FeedCard({Key? key, required this.post}) : super(key: key);
+
+  @override
+  _FeedCardState createState() => _FeedCardState();
+}
+
+class _FeedCardState extends State<FeedCard> {
+  bool _isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLiked = widget.post.likes.any((like) => like.userId == 'currentUserId');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,20 +108,14 @@ class FeedCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ListTile(
-          //   leading: CircleAvatar(
-          //     backgroundImage: NetworkImage(post.user.profileImage),
-          //   ),
-          //   title: Text(post.user.name),
-          // ),
           Image.network(
-            post.image,
+            widget.post.image,
             width: double.infinity,
             fit: BoxFit.contain,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(post.description ?? ''),
+            child: Text(widget.post.description ?? ''),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -124,9 +137,12 @@ class FeedCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.thumb_up),
+                  icon: Icon(
+                    _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
+                    color: _isLiked ? Colors.red : null,
+                  ),
                   onPressed: () {
-                    // Beğeni işlemleri burada yapılabilir
+                    _toggleLike();
                   },
                 ),
                 IconButton(
@@ -152,11 +168,26 @@ class FeedCard extends StatelessWidget {
   void _showCommentsSheet(BuildContext context) {
     Get.bottomSheet(
       CommentSheet(
-        postId: post.id,
+        postId: widget.post.id,
         comments: const [], // Yorumları buraya ekleyin
       ),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
+  }
+
+  void _toggleLike() async {
+    try {
+      LikedModel liked =
+          await AuthService().likePost(widget.post.id, !_isLiked);
+
+      print('Liked model: $liked'); // Kontrol için konsola yazdırma
+
+      setState(() {
+        _isLiked = liked.isLiked;
+      });
+    } catch (e) {
+      print('Error toggling like: $e');
+    }
   }
 }

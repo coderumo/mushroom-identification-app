@@ -117,8 +117,8 @@ class AuthService {
   }
 
   Future<GeneralResponse> getPost({bool getUsers = false}) async {
-    final url =
-        Uri.parse('$baseUrl$urlPosts${getUsers ? '?relations=user' : ''}');
+    final url = Uri.parse(
+        '$baseUrl$urlPosts${getUsers ? '?relations=user,likes' : ''}');
     final token = Database().tokenBox.get('token');
     final response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
@@ -273,42 +273,32 @@ class AuthService {
     }
   }
 
-  Future<LikedModel> likePost(String postId) async {
-    final url = Uri.parse('http://93.190.8.108:3000/like');
+  Future<LikedModel> likePost(String postId, bool isLiked) async {
+    final url = Uri.parse('$baseUrl$urlLike');
     final token = Database().tokenBox.get('token');
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'postId': postId, 'isLiked': true}),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'postId': postId, 'isLiked': isLiked}),
+      );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final res = LikedModel.fromJson(json.decode(response.body));
-      return res;
-    } else {
-      final errorResponse = json.decode(response.body);
-      final errorMessage = errorResponse['message'] ?? 'Unknown error occurred';
-      throw Exception('Failed to like post: $errorMessage');
-    }
-  }
-
-  Future<GeneralResponse> getLikes(String postId) async {
-    final url = Uri.parse('$baseUrl$urlLike/$postId');
-    final token = Database().tokenBox.get('token');
-    final response = await http.get(
-      url,
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return GeneralResponse.fromJson(data);
-    } else {
-      throw Exception('Failed to get likes');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final res = LikedModel.fromJson(json.decode(response.body));
+        return res;
+      } else {
+        final errorResponse = json.decode(response.body);
+        final errorMessage =
+            errorResponse['message'] ?? 'Unknown error occurred';
+        throw Exception('Failed to like post: $errorMessage');
+      }
+    } catch (e) {
+      print('Error liking post: $e');
+      throw Exception('Failed to like post: $e');
     }
   }
 }

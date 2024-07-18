@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -212,14 +213,6 @@ class _MushroomCard extends StatelessWidget {
                   const Row(),
                 ],
               ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: onDelete,
-                ),
-              ),
             ],
           ),
         ),
@@ -291,6 +284,16 @@ class _PostWidgetState extends State<PostWidget> {
         ),
       );
     }
+
+    if (_items.isEmpty) {
+      return Center(
+        child: Text(
+          'Henüz mantar paylaşmadınız',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      );
+    }
+
     return ListView.builder(
       itemCount: _items.length,
       itemBuilder: (context, index) {
