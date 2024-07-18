@@ -52,10 +52,22 @@ class HomeTab extends StatelessWidget {
         ),
         Obx(() {
           if (homeController.loading.value) {
-            return const Center(
-              child: SpinKitFadingCircle(
-                color: ColorConstants.darkGreen,
-                size: 50.0,
+            return Center(
+              child: Column(
+                children: [
+                  const SpinKitFadingCircle(
+                    color: ColorConstants.darkGreen,
+                    size: 50.0,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    homeController.state.value,
+                    style: const TextStyle(
+                      color: ColorConstants.darkGreen,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
             );
           } else {

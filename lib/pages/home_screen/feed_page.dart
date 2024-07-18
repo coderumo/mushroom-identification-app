@@ -111,89 +111,178 @@ class _FeedCardState extends State<FeedCard> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Card(
-      elevation: 5,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: widget.post.user?.profileImage != null ? NetworkImage(widget.post.user!.profileImage!) : null,
-              radius: 20,
-              child: widget.post.user?.profileImage == null ? const Icon(Icons.person) : null,
-            ),
-            title: Text(widget.post.user?.userName ?? ''),
-            subtitle: Text(widget.post.createdAt.forCommentDateString()),
-          ),
-          SizedBox(
-            height: widget.size?.height ?? size.height * 0.5,
-            child: Image.network(
-              widget.post.image,
-              width: double.infinity,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(widget.post.description ?? ''),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _showCommentsSheet(context);
-                  },
-                  child: Text(
-                    'Yorumları Göster..',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColorDark,
-                    ),
-                  ),
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage: widget.post.user?.profileImage != null ? NetworkImage(widget.post.user!.profileImage!) : null,
+                radius: 20,
+                child: widget.post.user?.profileImage == null ? const Icon(Icons.person) : null,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+              title: Text(widget.post.user?.userName ?? ''),
+              subtitle: widget.post.type != null ? Text(widget.post.type!) : null,
+              trailing: Text(widget.post.createdAt.forCommentDateString()),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: widget.size?.width ?? size.width,
+                height: widget.size?.height ?? size.height * 0.4,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Stack(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
-                            color: _isLiked ? Colors.blue : null,
-                          ),
-                          onPressed: () {
-                            _toggleLike();
-                            setState(() {
-                              _isLiked = !_isLiked;
-                              likeCount += _isLiked ? 1 : -1;
-                            });
-                          },
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ImageScreen(imageUrl: widget.post.image)));
+                      },
+                      child: Image.network(
+                        widget.post.image,
+                        width: widget.size?.width ?? size.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Material(
+                        elevation: 3,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                         ),
-                        Text('$likeCount Beğeni'),
-                      ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.comment),
-                      onPressed: () {
-                        _showCommentsSheet(context);
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.share),
-                      onPressed: () {
-                        // Paylaşma işlemleri burada yapılabilir
-                      },
+                        color: Colors.black.withOpacity(0.5),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.8,
+                                      child: Text(
+                                        widget.post.description ?? '',
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Material(
+                                        elevation: 3,
+                                        shape: ShapeBorder.lerp(
+                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          0.5,
+                                        ),
+                                        child: InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  _isLiked ? Icons.thumb_up_alt_rounded : Icons.thumb_up,
+                                                  color: _isLiked ? Colors.blue : Colors.black,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text('$likeCount Beğeni'),
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            _toggleLike();
+                                            setState(() {
+                                              _isLiked = !_isLiked;
+                                              likeCount += _isLiked ? 1 : -1;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Material(
+                                      elevation: 3,
+                                      shape: ShapeBorder.lerp(
+                                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        0.5,
+                                      ),
+                                      child: InkWell(
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.comment),
+                                              SizedBox(width: 8),
+                                              Text('Yorum Yap'),
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          _showCommentsSheet(context);
+                                        },
+                                      )),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+            TextButton(
+                onPressed: () {
+                  Get.bottomSheet(
+                    Material(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      child: SizedBox(
+                        height: size.height * 0.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Text(widget.post.description ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ),
+                    ),
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                  );
+                },
+                child: const Text("Açıklama")),
+          ],
+        ),
       ),
     );
   }
@@ -221,5 +310,20 @@ class _FeedCardState extends State<FeedCard> {
     } catch (e) {
       print('Error toggling like: $e');
     }
+  }
+}
+
+class ImageScreen extends StatelessWidget {
+  final String imageUrl;
+  const ImageScreen({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: InteractiveViewer(child: Image.network(imageUrl)),
+      ),
+    );
   }
 }

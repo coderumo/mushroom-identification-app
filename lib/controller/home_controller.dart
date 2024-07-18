@@ -11,6 +11,7 @@ import 'package:tez_front/controller/db_manager.dart';
 class HomeController extends GetxController {
   final PhotoController photoController = Get.put(PhotoController());
   var loading = false.obs;
+  var state = "".obs;
 
   final List<Widget> pages = [
     const Placeholder(), //öylesine
@@ -29,15 +30,19 @@ class HomeController extends GetxController {
           loading.value = false;
           return;
         }
+        state.value = 'Mantar Tanımlanıyor...';
         AuthService authService = AuthService();
         final res = await authService.classifyImage(image);
-        loading.value = false;
 
+        loading.value = false;
+        state.value = '';
+        final predictedProb = res['predicted_prob'] ?? 0;
         Get.to(ResultMushroom(
           bodyText: res['chatgpt_data'],
           title: res['true_labels'],
-          subTitle: res['canEat'] ? 'Yenebilir' : 'Yenmesi Tavsiye Edilmez',
+          subTitle: res['canEat'] ? 'Yenilebilir' : 'Yenmesi Tavsiye Edilmez',
           image: image,
+          predictedProb: predictedProb,
         ));
       } catch (e) {
         print('$e');
@@ -49,14 +54,18 @@ class HomeController extends GetxController {
         loading.value = false;
         return;
       }
+      state.value = 'Mantar Tanımlanıyor...';
       AuthService authService = AuthService();
       final res = await authService.classifyImage(image);
       loading.value = false;
+      state.value = '';
+      final predictedProb = res['predicted_prob'] ?? 0;
       Get.to(ResultMushroom(
         bodyText: res['chatgpt_data'],
         title: res['true_labels'],
-        subTitle: res['canEat'] ? 'Yenebilir' : 'Yenmesi Tavsiye Edilmez',
+        subTitle: res['canEat'] ? 'Yenilebilir' : 'Yenmesi Tavsiye Edilmez',
         image: image,
+        predictedProb: predictedProb,
       ));
     } else if (index == 3 && Database.instance.isGuest()) {
       Get.snackbar(

@@ -21,8 +21,7 @@ class ProfileTab extends StatelessWidget {
     return Obx(() {
       final user = controller.user.value;
       final String name = user?.name ?? 'Kullanıcı Adı';
-      final String url =
-          user?.profileImage ?? 'https://via.placeholder.com/150';
+      final String url = user?.profileImage ?? 'https://via.placeholder.com/150';
       const double radius = 60;
 
       return Material(
@@ -43,8 +42,7 @@ class ProfileTab extends StatelessWidget {
                       if (image == null) {
                         return;
                       }
-                      final res = await controller.authService
-                          .setProfileImage(File(image.path));
+                      final res = await controller.authService.setProfileImage(File(image.path));
                       if (res.success) {
                         Get.snackbar('Başarılı', 'Profil resmi güncellendi');
                       } else {
@@ -54,8 +52,7 @@ class ProfileTab extends StatelessWidget {
                     },
                     child: CircleAvatar(
                       radius: radius * 0.3,
-                      backgroundColor:
-                          ColorConstants.darkGreen.withOpacity(0.8),
+                      backgroundColor: ColorConstants.darkGreen.withOpacity(0.8),
                       child: const Icon(
                         Icons.edit,
                         color: Colors.white,
@@ -75,11 +72,7 @@ class ProfileTab extends StatelessWidget {
             ),
             TabBar(
               controller: controller.tabController,
-              tabs: MyTabViews.values
-                  .map((e) => Tab(text: e.name))
-                  .toList()
-                  .reversed
-                  .toList(),
+              tabs: MyTabViews.values.map((e) => Tab(text: e.name)).toList().reversed.toList(),
             ),
             Expanded(
               child: TabBarView(
@@ -172,7 +165,10 @@ class _SavedPostWidgetState extends State<SavedPostWidget> {
   }
 }
 
-enum MyTabViews { Kaydedilenler, Paylasilanlar }
+enum MyTabViews {
+  Kaydedilenler,
+  Paylasilanlar
+}
 
 extension MyTabViewExtension on MyTabViews {}
 
@@ -323,7 +319,7 @@ void onTap(BuildContext context, int index, List<PostModel> items) {
           children: [
             SizedBox(
               width: double.infinity,
-              height: double.infinity,
+              height: 600,
               child: Image.network(items[index].image, fit: BoxFit.contain),
             ),
             Positioned(

@@ -15,6 +15,7 @@ class ResultMushroom extends StatefulWidget {
   final String title;
   final String subTitle;
   final String bodyText;
+  final double predictedProb;
   final File image;
 
   const ResultMushroom({
@@ -23,6 +24,7 @@ class ResultMushroom extends StatefulWidget {
     required this.subTitle,
     required this.bodyText,
     required this.image,
+    required this.predictedProb,
   }) : super(key: key);
 
   @override
@@ -31,8 +33,8 @@ class ResultMushroom extends StatefulWidget {
 
 class _ResultMushroomState extends State<ResultMushroom> {
   final AuthService authService = AuthService();
-  final descriptionController = TextEditingController();
-  final specieController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+
   PhotoController photoController = Get.find();
   MapController mapController = Get.put(MapController());
   String address = '';
@@ -44,11 +46,14 @@ class _ResultMushroomState extends State<ResultMushroom> {
     final double deviceHeight = mediaQueryData.size.height;
     final double deviceWidth = mediaQueryData.size.width;
 
-    const buttonText = 'Kaydet ve Paylaş';
+    const buttonText = 'Paylaş';
     const buttonText2 = 'Kaydet';
-    const buttonText3 = 'İptal';
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sonuç'),
+      ),
       body: Obx(
         () {
           if (photoController.image.value == null) {
@@ -61,102 +66,139 @@ class _ResultMushroomState extends State<ResultMushroom> {
           } else {
             return Column(
               children: [
-                Expanded(
-                  flex: 3,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Image.file(
-                          widget.image,
-                          fit: BoxFit.fill,
-                        ),
-                      )
-                    ],
+                Container(
+                  height: deviceHeight * 0.4,
+                  width: deviceWidth,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Image.file(
+                    photoController.image.value!,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: ColorConstants.darkGreen,
-                          width: 2,
+                SizedBox(
+                  height: deviceHeight * 0.12,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: ColorConstants.darkGreen,
+                            width: 2,
+                          ),
+                        ),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
                         ),
                       ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          if (!Database.instance.isGuest())
+                            CustomButton(
+                              buttonText: buttonText,
+                              onPressed: () async {
+                                await Get.bottomSheet(
+                                  BottomSheet(
+                                    onClosing: () {
+                                      Get.snackbar('İptal', 'İşlem iptal edildi');
+                                    },
+                                    builder: (context) => SizedBox(
+                                      height: size.height * 0.2,
+                                      width: size.width,
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _textController,
+                                              decoration: const InputDecoration(
+                                                hintText: 'Açıklama (isteğe bağlı)',
+                                              ),
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              await mapController.getCurrentLocation();
+                                              if (mapController.selectedLocation.value != null) {
+                                                Get.back();
+                                                final postRequestModel = PostRequestModel(
+                                                  description: _textController.text,
+                                                  specie: widget.title,
+                                                  place: address,
+                                                  latitude: mapController.selectedLocation.value!.latitude.toString(),
+                                                  longitude: mapController.selectedLocation.value!.longitude.toString(),
+                                                );
+
+                                                await authService.createPost(postRequestModel, widget.image);
+                                                Get.snackbar('Başarılı', 'Gönderi başarıyla paylaşıldı');
+                                              } else {
+                                                Get.snackbar('Hata', 'Konum alınamadı.');
+                                              }
+                                            },
+                                            child: const Text('Paylaş'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+
+                                Get.back();
+                              },
+                            ),
+                          if (!Database.instance.isGuest())
+                            CustomButton(
+                              buttonText: buttonText2,
+                              onPressed: () async {
+                                await mapController.getCurrentLocation();
+                                if (mapController.selectedLocation.value != null) {
+                                  setState(() {
+                                    address = mapController.address.value;
+                                    selectedLocation = mapController.selectedLocation.value;
+                                  });
+                                  Get.snackbar('Kaydedildi', 'Gönderi Başarıyla kaydedildi');
+                                  await savePost(mapController.selectedLocation.value!);
+                                } else {
+                                  Get.snackbar('Hata', 'Konum alınamadı.');
+                                }
+                              },
+                            ),
+                        ],
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        if (!Database.instance.isGuest())
-                          CustomButton(
-                            buttonText: buttonText,
-                            onPressed: () async {
-                              await mapController.getCurrentLocation();
-                              if (mapController.selectedLocation.value !=
-                                  null) {
-                                setState(() {
-                                  address = mapController.address.value;
-                                  selectedLocation =
-                                      mapController.selectedLocation.value;
-                                });
-                                await savePost();
-                              } else {
-                                Get.snackbar('Hata', 'Konum alınamadı.');
-                              }
-                            },
-                          ),
-                        if (!Database.instance.isGuest())
-                          CustomButton(
-                            buttonText: buttonText2,
-                            onPressed: () async {
-                              await mapController.getCurrentLocation();
-                              if (mapController.selectedLocation.value !=
-                                  null) {
-                                setState(() {
-                                  address = mapController.address.value;
-                                  selectedLocation =
-                                      mapController.selectedLocation.value;
-                                });
-                                await savePost();
-                                Get.snackbar('Kaydedildi',
-                                    'Gönderi Başarıyla kaydedildi');
-                              } else {
-                                Get.snackbar('Hata', 'Konum alınamadı.');
-                              }
-                            },
-                          ),
-                        CustomButton(
-                          buttonText: buttonText3,
-                          onPressed: photoController.cancel,
-                        ),
-                      ],
                     ),
                   ),
                 ),
                 Expanded(
                   flex: 4,
-                  child: ListView(
-                    children: [
-                      _TitleWidget(title: widget.title),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      _SubTitleWidget(subTitle: widget.subTitle),
-                      _TextWidget(bodyText: widget.bodyText),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      if (address.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Adres: $address'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView(
+                      children: [
+                        _TitleWidget(title: widget.title),
+                        if (widget.predictedProb < 50) const Text("Doğruluk oranı düşük bilgileri teyit etmek için uzman birine danışın."),
+                        const SizedBox(
+                          height: 10,
                         ),
-                    ],
+                        _SubTitleWidget(subTitle: widget.subTitle),
+                        _TextWidget(bodyText: widget.bodyText),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        if (address.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Adres: $address'),
+                          ),
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -167,13 +209,13 @@ class _ResultMushroomState extends State<ResultMushroom> {
     );
   }
 
-  Future<void> savePost() async {
+  Future<void> savePost(LatLng loc) async {
     final postRequestModel = PostRequestModel(
-      description: descriptionController.text,
-      specie: specieController.text,
+      description: _textController.text,
+      specie: widget.title,
       place: address,
-      latitude: selectedLocation?.latitude.toString() ?? '',
-      longitude: selectedLocation?.longitude.toString() ?? '',
+      latitude: loc.latitude.toString(),
+      longitude: loc.longitude.toString(),
     );
     try {
       await authService.createDraft(postRequestModel, widget.image);
@@ -195,10 +237,7 @@ class _TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       bodyText,
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge
-          ?.copyWith(fontWeight: FontWeight.w400),
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w400),
     );
   }
 }
@@ -214,10 +253,7 @@ class _SubTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       subTitle,
-      style: Theme.of(context)
-          .textTheme
-          .titleLarge
-          ?.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: subTitle == 'Yenilebilir' ? ColorConstants.darkGreen : Colors.red),
     );
   }
 }
@@ -234,10 +270,7 @@ class _TitleWidget extends StatelessWidget {
     return Text(
       title,
       textAlign: TextAlign.center,
-      style: Theme.of(context)
-          .textTheme
-          .headlineSmall
-          ?.copyWith(fontWeight: FontWeight.w600),
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 }

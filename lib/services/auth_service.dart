@@ -310,6 +310,7 @@ class AuthService {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = json.decode(responseString);
+      print(data);
       return data;
     } else {
       final errorResponse = json.decode(responseString);

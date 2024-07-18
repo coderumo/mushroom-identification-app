@@ -13,6 +13,7 @@ class PostModel {
   final DateTime? deletedAt;
   final PostUserModel? user;
   final List<LikedModel> likes;
+  final String? type;
 
   PostModel({
     required this.id,
@@ -27,6 +28,7 @@ class PostModel {
     required this.deletedAt,
     required this.user,
     required this.likes,
+    this.type,
   });
 
   factory PostModel.fromJson(Map<String, dynamic>? json) {
@@ -47,6 +49,7 @@ class PostModel {
       deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,
       user: json['user'] != null ? PostUserModel.fromJson(json['user']) : null,
       likes: (json['likes'] as List<dynamic>?)?.map((item) => LikedModel.fromJson(item as Map<String, dynamic>)).toList() ?? [],
+      type: json['specie'],
     );
   }
 
@@ -63,6 +66,7 @@ class PostModel {
         'deletedAt': deletedAt?.toIso8601String(),
         'user': user?.toJson(),
         'likes': likes.map((like) => like.toJson()).toList(),
+        'specie': type,
       };
 
   String time(DateTime? time) {

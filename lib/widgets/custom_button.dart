@@ -16,16 +16,19 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding: ProjectPaddings.buttonOutPadding,
       child: ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(width: 130, height: 40),
+        constraints: const BoxConstraints.tightFor(width: 120, height: 40),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: ColorConstants.darkGreen,
           ),
           onPressed: onPressed,
-          child: Text(
-            buttonText,
-            style: const TextStyle(
-              color: Colors.black,
+          child: Center(
+            child: Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ),
